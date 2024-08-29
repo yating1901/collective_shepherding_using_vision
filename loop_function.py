@@ -72,6 +72,22 @@ class Loop_Function:
         self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
         self.clock = pygame.time.Clock()
 
+    def draw_background(self):
+        # add background
+        images_path = os.getcwd() + "/images/"
+        background = pygame.image.load(images_path + "background_2" + ".jpg")
+        background = pygame.transform.scale(background, (self.WIDTH + 2 * self.window_pad, self.HEIGHT+ 2 * self.window_pad))
+        self.screen.blit(background, (0, 0))
+
+        # add fence
+        fence_h = pygame.image.load(images_path + "fence_h" + ".png")
+        fence_v = pygame.image.load(images_path + "fence_v" + ".png")
+        fence_h = pygame.transform.scale(fence_h, (self.Target_size + self.window_pad*2, self.window_pad))
+        fence_v = pygame.transform.scale(fence_v, (self.window_pad, self.Target_size + self.window_pad*2))
+
+        self.screen.blit(fence_h, (self.Target_x-self.window_pad, self.Target_y-self.Target_size))
+        self.screen.blit(fence_v, (self.Target_x-self.Target_size, self.Target_y-self.window_pad))
+
     def draw_walls(self):
         """Drawing walls on the arena according to initialization, i.e. width, height and padding"""
         pygame.draw.line(self.screen, support.BLACK,
@@ -299,14 +315,45 @@ class Loop_Function:
         """Drawing environment, agents and every other visualization in each timestep"""
         self.screen.fill(support.BACKGROUND)
         self.draw_walls()
-
+        self.draw_background()
         self.draw_target_place()
 
         if self.show_zones:
             self.draw_agent_zones()
-        self.agents.draw(self.screen)
+
+        # self.agents.draw(self.screen)
+
         self.draw_framerate()
         self.draw_agent_stats()
+
+        self.draw_agent_animation()
+
+    def draw_agent_animation(self):
+        images_path = os.getcwd() + "/images/"
+        sheep_image = pygame.image.load(images_path + "sheep_1" + ".png")
+        # scale factor
+        sheep_scale = 0.05
+        #sheep_scale_2 = 0.064
+        sheep_image = pygame.transform.scale(sheep_image, (
+            int(sheep_image.get_width() * sheep_scale), int(sheep_image.get_height() * sheep_scale)))
+
+        # transform size of image
+        shepherd_image = pygame.image.load(images_path + "shepherd" + ".png")
+        shepherd_scale = 0.3
+        shepherd_image = pygame.transform.scale(shepherd_image, (
+            int(shepherd_image.get_width() * shepherd_scale), int(shepherd_image.get_height() * shepherd_scale)))
+
+        for agent in self.agents:
+            # update position
+            rect_x = agent.x - agent.radius
+            rect_y = agent.y - agent.radius
+            if agent.id[0:5] == "sheep":
+                self.mask = pygame.mask.from_surface(sheep_image)
+                self.screen.blit(sheep_image, (rect_x, rect_y))  # scaled_image
+            else:
+                self.mask = pygame.mask.from_surface(shepherd_image)
+                self.screen.blit(shepherd_image, (rect_x, rect_y))
+
 
     def draw_agent_zones(self):
         for agent in self.agents:
