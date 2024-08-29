@@ -63,9 +63,6 @@ class Loop_Function:
         self.sheep_agents = pygame.sprite.Group()
         self.shepherd_agents = pygame.sprite.Group()
 
-        # Creating N agents in the environment
-        # self.create_agents()  #!!! to be removed
-
         self.add_sheep_agents()
         self.add_shepherd_agent()
 

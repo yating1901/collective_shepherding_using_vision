@@ -344,7 +344,6 @@ class Sheep_Agent(pygame.sprite.Sprite):
         """
         self.update_sheep_state(agents)
 
-
         self.reflect_from_walls()
 
         self.reflect_from_fence()
