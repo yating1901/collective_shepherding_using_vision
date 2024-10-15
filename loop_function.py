@@ -3,7 +3,7 @@ import numpy as np
 import sys
 from datetime import datetime
 from math import atan2
-from agent import Agent
+
 from sheep_agent import Sheep_Agent
 from shepherd_agent import Shepherd_Agent
 import support
@@ -12,7 +12,7 @@ import os, json
 class Loop_Function:
     def __init__(self, N_sheep=10, N_shepherd = 1, Time=1000, width=500, height=500,
                  target_place_x = 1000, target_place_y = 1000, target_size = 200,
-                 framerate=25, window_pad=30, with_visualization=True,
+                 framerate=25, window_pad=30, with_visualization=True, show_animation = False,
                  agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False):
         """
         Initializing the main simulation instance
@@ -44,6 +44,7 @@ class Loop_Function:
         self.Time = Time
         self.tick = 0
         self.with_visualization = with_visualization
+        self.show_animation = show_animation
         self.framerate_orig = framerate
         self.framerate = framerate
         self.is_paused = False
@@ -194,9 +195,9 @@ class Loop_Function:
 
     def add_sheep_agents(self):
         for i in range(self.n_sheep):
-            x = np.random.uniform(100, 500)
-            y = np.random.uniform(100, 500)
-            orient = np.random.uniform(0, 2*np.pi)   #(-np.pi, np.pi)
+            x = np.random.uniform(100, self.WIDTH/3)
+            y = np.random.uniform(100, self.HEIGHT/3)
+            orient = np.random.uniform(-np.pi, np.pi) #(0, 2*np.pi)
             # print(x, y, orient)
             sheep_agent = Sheep_Agent(
                 id="sheep: " + str(i),
@@ -312,18 +313,19 @@ class Loop_Function:
         """Drawing environment, agents and every other visualization in each timestep"""
         self.screen.fill(support.BACKGROUND)
         self.draw_walls()
-        self.draw_background()
         self.draw_target_place()
 
         if self.show_zones:
             self.draw_agent_zones()
 
-        # self.agents.draw(self.screen)
-
         self.draw_framerate()
         self.draw_agent_stats()
 
-        self.draw_agent_animation()
+        if self.show_animation:
+            self.draw_background()
+            self.draw_agent_animation()
+        else:
+            self.agents.draw(self.screen)
 
     def draw_agent_animation(self):
         images_path = os.getcwd() + "/images/"
@@ -405,15 +407,6 @@ class Loop_Function:
                     for agent1, agent2 in collision_group_aa.items():
                         self.agent_agent_collision(agent1, agent2)
 
-                # Updating force on sheep agents
-                # for sheep_agent in self.sheep_agents:
-                    # sheep_agent.update_shepherd_forces(self.shepherd_agents)
-
-                # Updating force on shepherd agents
-                # for shepherd_agent in self.shepherd_agents:
-                    # shepherd_agent.update_shepherd_forces(self.shepherd_agents)
-                    # shepherd_agent.herd_sheep_agents(self.sheep_agents, self.n_sheep)
-
                 #update robot position from external system
                 if self.robot_loop:
                     path = os.getcwd()
@@ -459,7 +452,7 @@ class Loop_Function:
                 self.draw_frame()
                 pygame.display.flip()
 
-            # Moving time forward
+            # # Moving time forward !useful!
             # if self.tick % 100 == 0 or self.tick == 1:
             #     print(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} t={self.tick}")
             #     print(f"Simulation FPS: {self.clock.get_fps()}")

@@ -47,7 +47,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         # Non-initialisable private attributes
         self.velocity = 1  # agent absolute velocity
-        self.v_max = 1  # maximum velocity of agent
+        # self.v_max = 1  # maximum velocity of agent
 
         # Interaction
         self.is_moved_with_cursor = 0
@@ -78,7 +78,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         #############################################
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
-        self.v0 = 1 #0.5
+        self.v0 = 1
         self.vt = self.v0  # when tick = 0, vt = v0;
         self.v_upper = 2
         self.target_x = target_x
@@ -91,14 +91,14 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.w_dot = 0.0
 
         ##### sheep interaction parameters#####
-        self.rep_distance = 25 #20
-        self.att_distance = 80 #50
-        self.K_repulsion = 3  #25   #2 #15
-        self.K_attraction = 8.0  #0.1 #8  # 0.8 #8
-        self.K_shepherd = 15  #5 #2.5 #1.5  #0.6 #18    #1.5 #12
-        self.K_Dr = 0.01  # noise_strength
-        self.tick_time = 0.1  #0.01
-        self.max_turning_angle = np.pi * 1 / 4
+        self.rep_distance = 20  #10  #20
+        self.att_distance = 50  #25  #50
+        self.K_repulsion = 25    #2
+        self.K_attraction = 0   #0.8  #5.0
+        self.K_shepherd = 15    # 1.5
+        self.K_Dr = 0.1  # 0.1 noise_strength
+        self.tick_time = 0.01  #0.1
+        self.max_turning_angle = np.pi * 2 / 3 #np.pi * 1 / 4
         self.f_avoid_x = 0.0
         self.f_avoid_y = 0.0
         self.f_att_x = 0.0
@@ -106,7 +106,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.num_rep = 0
 
         #####shepherd relative parameters#########
-        self.safe_distance = 200
+        self.safe_distance = 200 #130 #65   #200
         self.f_shepherd_force_x = 0.0
         self.f_shepherd_force_y = 0.0
 
@@ -135,18 +135,16 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.f_avoid_y = 0.0
         self.num_rep = 0
         for agent in agents:
-
             # if agent.id != self.id and agent.state == "moving":
             # sheep are only avoiding others of the same type
             if agent.id != self.id and agent.state == self.state:
                 x_j = agent.x
                 y_j = agent.y
                 distance = np.sqrt((self.x - x_j) ** 2 + (self.y - y_j) ** 2)
-                if distance <= self.rep_distance and distance != 0.0:
-                    r_x = r_x + (self.x - x_j) / distance
-                    r_y = r_y + (self.y - y_j) / distance
+                if distance <= self.rep_distance:
+                    r_x = r_x + (self.x - x_j) / (distance + 0.000001)
+                    r_y = r_y + (self.y - y_j) / (distance + 0.000001)
                     self.num_rep += 1
-
         self.f_avoid_x = r_x
         self.f_avoid_y = r_y
 
@@ -163,10 +161,9 @@ class Sheep_Agent(pygame.sprite.Sprite):
                 x_j = agent.x
                 y_j = agent.y
                 distance = np.sqrt((self.x - x_j) ** 2 + (self.y - y_j) ** 2)
-                if self.att_distance >= distance >= self.rep_distance and distance != 0.0:
-                    r_x = r_x + (x_j - self.x) / distance
-                    r_y = r_y + (y_j - self.y) / distance
-
+                if self.att_distance >= distance > self.rep_distance:
+                    r_x = r_x + (x_j - self.x) / (distance + 0.000001)
+                    r_y = r_y + (y_j - self.y) / (distance + 0.000001)
         self.f_att_x = r_x
         self.f_att_y = r_y
 
@@ -178,16 +175,12 @@ class Sheep_Agent(pygame.sprite.Sprite):
             shepherd_x = shepherd.x
             shepherd_y = shepherd.y
             distance = np.sqrt((self.x - shepherd_x) ** 2 + (self.y - shepherd_y) ** 2)
-            if distance <= self.safe_distance and distance != 0.0:
+            if distance <= self.safe_distance:
                 num_dangerous_shepherd = num_dangerous_shepherd + 1
-                r_x = r_x + (self.x - shepherd_x) / distance  # unit vector  ?? check distance == 0 ?
-                r_y = r_y + (self.y - shepherd_y) / distance  # unit vector
-        if num_dangerous_shepherd != 0:
-            self.f_shepherd_force_x = r_x / num_dangerous_shepherd
-            self.f_shepherd_force_y = r_y / num_dangerous_shepherd
-        else:
-            self.f_shepherd_force_x = 0.0
-            self.f_shepherd_force_y = 0.0
+                r_x = r_x + (self.x - shepherd_x) / (distance + 0.000001)  # unit vector
+                r_y = r_y + (self.y - shepherd_y) / (distance + 0.000001)  # unit vector
+        self.f_shepherd_force_x = r_x
+        self.f_shepherd_force_y = r_y
         return
 
     def update_sheep_state(self, agents):
@@ -197,7 +190,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if x >= (self.target_x-self.target_size) and y >= (self.target_y-self.target_size):
             self.state = "staying"
             self.color = support.LIGHT_BLUE
-            self.v0 = 0.5
+            self.v0 = 1
         else:
             self.state = "moving"
             self.color = support.GREEN
@@ -255,7 +248,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
                     self.orientation -= np.pi / 2
                 elif np.pi * 3 / 2 < self.orientation <= np.pi * 2:
                     self.orientation += np.pi / 2
-        # self.prove_orientation()  # bounding orientation into 0 and 2pi
+
         self.orientation = support.reflect_angle(self.orientation)
 
     def reflect_from_walls(self):
@@ -302,7 +295,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
                     self.orientation += np.pi / 2
                 elif 0 <= self.orientation < np.pi / 2:
                     self.orientation -= np.pi / 2
-            # self.prove_orientation()  # bounding orientation into 0 and 2pi
+
             self.orientation = support.reflect_angle(self.orientation)
 
     def draw_update(self):
@@ -354,21 +347,22 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         self.Get_attraction_force(agents)
 
-            # self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-            # self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
         if self.state == "moving":
-            # self.rep_distance = 25
-            if self.num_rep != 0:
-                self.f_x = self.f_avoid_x * self.K_repulsion
-                self.f_y = self.f_avoid_y * self.K_repulsion
-            else:
-                self.f_x = self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-                self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
+
+            # if self.num_rep != 0:
+            #     self.f_x = self.f_avoid_x * self.K_repulsion
+            #     self.f_y = self.f_avoid_y * self.K_repulsion
+            # else:
+            #     self.f_x = self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
+            #     self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
+
+            self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
+            self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
         if self.state == "staying":
             # self.rep_distance = 15
-            self.f_x = self.f_avoid_x * self.K_repulsion #+ self.f_att_x * self.K_attraction
-            self.f_y = self.f_avoid_y * self.K_repulsion #+ self.f_att_y * self.K_attraction
+            self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction
+            self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction
 
         self.v_dot = self.f_x * np.cos(self.orientation) + self.f_y * np.sin(self.orientation)
         self.w_dot = -self.f_x * np.sin(self.orientation) + self.f_y * np.cos(self.orientation)
@@ -378,20 +372,17 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.w_dot <= -self.max_turning_angle:
             self.w_dot = -self.max_turning_angle
 
-        # Dr = np.random.normal(0, 1) * np.sqrt(2 * self.K_Dr) / (self.tick_time ** 0.5)
-        # self.vt += self.v_dot * self.tick_time
-        self.vt = self.v0 + self.v_dot * self.tick_time
-        # # limit velocity
-        if self.vt >= 0:
-            self.vt = np.minimum(self.vt, self.v_upper)
-        else:
-            self.vt = -np.minimum(np.abs(self.vt), self.v_upper)
+        Dr = np.random.normal(0, 1) * np.sqrt(2 * self.K_Dr) / (self.tick_time ** 0.5)
 
-        self.x += self.vt * np.cos(self.orientation)
-        self.y += self.vt * np.sin(self.orientation)
-        self.orientation += self.w_dot * self.tick_time
+        self.vt = self.v0 + self.v_dot
 
-        self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
+        self.orientation += (self.w_dot/self.v0 + Dr) * self.tick_time  # 1/self.vt inertia ??
+        self.orientation = support.transform_angle(self.orientation)    # [-pi, pi]
+
+        self.x += self.vt * np.cos(self.orientation)* self.tick_time
+        self.y += self.vt * np.sin(self.orientation)* self.tick_time
+
+
 
         # updating agent visualization
         self.draw_update()
@@ -408,11 +399,11 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.orientation > np.pi * 2:
             self.orientation = self.orientation - 2 * np.pi
 
-    def prove_velocity(self):
-        """Restricting the absolute velocity of the agent"""
-        vel_sign = np.sign(self.velocity)
-        if vel_sign == 0:
-            vel_sign = +1
-        if np.abs(self.velocity) > self.v_max:
-            # stopping agent if too fast during exploration
-            self.velocity = self.v_max
+    # def prove_velocity(self):
+    #     """Restricting the absolute velocity of the agent"""
+    #     vel_sign = np.sign(self.velocity)
+    #     if vel_sign == 0:
+    #         vel_sign = +1
+    #     if np.abs(self.velocity) > self.v_max:
+    #         # stopping agent if too fast during exploration
+    #         self.velocity = self.v_max

@@ -183,7 +183,7 @@ def transform_angle(theta):  # [-pi, pi]
 def reflect_angle(angle):  # [0, 2pi]
     while angle >= 2 * np.pi:
         angle = angle - 2 * np.pi
-    while angle <= 0:
+    while angle < 0:
         angle = angle + 2 * np.pi
     return angle
 
