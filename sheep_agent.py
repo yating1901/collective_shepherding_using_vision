@@ -359,10 +359,10 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
             self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
-        if self.state == "staying":
-            # self.rep_distance = 15
-            self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction
-            self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction
+        # if self.state == "staying":
+        #     # self.rep_distance = 15
+        #     self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction
+        #     self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction
 
         self.v_dot = self.f_x * np.cos(self.orientation) + self.f_y * np.sin(self.orientation)
         self.w_dot = -self.f_x * np.sin(self.orientation) + self.f_y * np.cos(self.orientation)

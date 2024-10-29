@@ -7,11 +7,11 @@ Boundary_y = Target_place_y + Target_size
 
 
 TICK = 1
-Iterations = 20000
+Iterations = 200000
 
 N_sheep = 100
 N_shepherd = 3
-L3 = 0
+L3 = 40
 Fps = 50
 Robot_Loop = False
 Show_Animation = False

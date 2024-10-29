@@ -142,22 +142,26 @@ class Loop_Function:
                     if agent.state == 1.0:
                         # drive mode
                         status = [
-                            f"ID: {agent.id[10:]}",
+                            # f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Drive: {agent.drive_agent_id}"
+                            f"Drive: {agent.drive_agent_id}",
+                            # f"D_x: {agent.drive_point_x:.1f}",
+                            # f"D_y: {agent.drive_point_y:.1f}"
                         ]
                     else:
                         # collect mode
                         status = [
-                            f"ID: {agent.id[10:]}",
+                            # f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Collect: {agent.collect_agent_id}"
+                            f"Collect: {agent.collect_agent_id}",
+                            # f"C_x: {agent.drive_point_x:.1f}",
+                            # f"C_y: {agent.drive_point_y:.1f}"
                         ]
                 for i, stat_i in enumerate(status):
                     text = font.render(stat_i, True, support.BLACK)
                     if agent.id[0:5] == "sheep":
-                        self.screen.blit(text, (agent.x + 2 * agent.radius,
-                                            agent.y + 2 * agent.radius + i * (font_size + spacing)))
+                        self.screen.blit(text, (agent.x - 3 * agent.radius,
+                                            agent.y - 3 * agent.radius + i * (font_size + spacing)))
                     else:
                         self.screen.blit(text, (agent.x + 2 * agent.radius,
                                                 agent.y + 2 * agent.radius + i * (font_size + spacing)))

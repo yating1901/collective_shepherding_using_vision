@@ -141,7 +141,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
             if shepherd.id != self.id:
                 # print(self.id[9:], "neighbor:", shepherd.id, self.l3)
                 distance = np.sqrt((shepherd.x - self.x) ** 2 + (shepherd.y - self.y) ** 2)
-                if distance <= self.l3:
+                if distance < self.l3:
                     neighbor_num = neighbor_num + 1
                     r_x = r_x + (self.x - shepherd.x)
                     r_y = r_y + (self.y - shepherd.y)
@@ -288,7 +288,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
                     self.state = 0.0
                     # lock the ID of the furthest agent for the collect mode;
                     self.collect_agent_id = int(max_agent_index)
-                    break
+
                 # switch to collect mode if the furthest agent is far from the group enough
                 # and remained in moving state
                 if int(agent.id[7:]) == max_agent_index:
@@ -308,7 +308,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
                 if int(agent.id[7:]) == self.collect_agent_id:
                     # IF the collecting agent is closer enough to ANY AGENT in the GROUP
                     # Or IF the collecting agent are staying inside the circe;
-                    if (angle_difference_agent_mass <= np.pi / 3) or (agent.state == "staying"):
+                    if (angle_difference_agent_mass <= self.Angle_Threshold_Collection) or (agent.state == "staying"):
                         self.state = 1.0  # drive_mode_true
 
         # drive/collect the cloest/furtherest agent toward the target;
@@ -333,15 +333,17 @@ class Shepherd_Agent(pygame.sprite.Sprite):
 
         F_x = self.f_x_other_shepherd + self.f_drive_agent_x
         F_y = self.f_y_other_shepherd + self.f_drive_agent_y
+        # print("self.f_drive_agent_x:",self.f_drive_agent_x, "self.f_drive_agent_y", self.f_drive_agent_y)
+        # print("self.f_x_other_shepherd:", self.f_x_other_shepherd, "self.f_y_other_shepherd", self.f_y_other_shepherd)
         # calculate the linear speed and angular speed;
         v_dot = F_x * np.cos(self.orientation) + F_y * np.sin(self.orientation)   # heading_direction_acceleration
         w_dot = -F_x * np.sin(self.orientation) + F_y * np.cos(self.orientation)  # angular_acceleration
         # w_dot = w_dot / np.abs(self.v0 + v_dot)
 
-        if w_dot > self.max_turning_angle:
-            w_dot = self.max_turning_angle
-        if w_dot <= -self.max_turning_angle:
-            w_dot = -self.max_turning_angle
+        # if w_dot > self.max_turning_angle:
+        #     w_dot = self.max_turning_angle
+        # if w_dot <= -self.max_turning_angle:
+        #     w_dot = -self.max_turning_angle
 
         noise = np.sqrt(2 * self.Dr) / (self.tick_time ** 0.5) * np.random.normal(0, 1)
 
@@ -394,20 +396,20 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         fence_width = 10
         # if self.state == "moving":
             # Reflection from left fence
-        if (self.x > self.target_x - self.target_size - fence_width) and (
+        if (self.x > self.target_x - self.target_size/2 - fence_width) and (
                 self.y >= self.target_y - self.window_pad):
 
-            self.x = self.target_x - self.target_size - fence_width - 1
+            self.x = self.target_x - self.target_size/2 - fence_width - 1
 
             if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
                 self.orientation -= np.pi / 2
             elif 0 <= self.orientation <= np.pi / 2:
                 self.orientation += np.pi / 2
         # Reflection from upper fence
-        if (self.y > self.target_y - self.target_size - fence_width) and (
+        if (self.y > self.target_y - self.target_size/2 - fence_width) and (
                 self.x >= self.target_x - self.window_pad):
 
-            self.y = self.target_y - self.target_size - fence_width - 1
+            self.y = self.target_y - self.target_size/2 - fence_width - 1
 
             if np.pi / 2 <= self.orientation <= np.pi:
                 self.orientation += np.pi / 2
