@@ -7,12 +7,12 @@ Boundary_y = Target_place_y + Target_size
 
 
 TICK = 1
-Iterations = 200000
+Iterations = 20000
 
-N_sheep = 100
-N_shepherd = 3
-L3 = 40
-Fps = 50
+N_sheep = 60
+N_shepherd = 2
+L3 = 50
+Fps = 25
 Robot_Loop = False
 Show_Animation = False
 
@@ -32,7 +32,8 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               show_animation = Show_Animation,
                               agent_radius= 10,  # 10 Agent radius in pixels
                               L3 = L3,  # repulsion distance
-                              robot_loop = Robot_Loop)
+                              robot_loop = Robot_Loop,
+                              physical_obstacle_avoidance=False)
 
 # we loop through all the agents of the created simulation
 print("Setting parameters for agent", end = ' ')
