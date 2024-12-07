@@ -7,8 +7,12 @@ from math import atan2
 
 import pygame
 import numpy as np
+#from statsmodels.sandbox.regression.example_kernridge import scale
+
 import support
-import vision_functions
+
+
+#from scipy.stats import norm
 
 
 class Shepherd_Agent(pygame.sprite.Sprite):
@@ -46,6 +50,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.selected_color = support.LIGHT_BLUE
         self.show_stats = True
         self.change_color_with_orientation = False
+        self.uncomfortable_distance = 60
 
         # Non-initialisable private attributes
         self.velocity = 1  # agent absolute velocity
@@ -99,6 +104,8 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.f_x_other_shepherd = 0.0
         self.f_y_other_shepherd = 0.0
 
+        self.explicit_rule = True
+
         # to generate robot file
         self.drive_point_x  = 0.0
         self.drive_point_y  = 0.0
@@ -132,6 +139,28 @@ class Shepherd_Agent(pygame.sprite.Sprite):
             self.draw_update()
         else:
             self.is_moved_with_cursor = 0
+
+
+    def explicit_coordinate(self, shepherd_agents):
+        neighbor_num = 0
+        for shepherd in shepherd_agents:
+            if shepherd.id != self.id:
+                # print(self.id[9:], "neighbor:", shepherd.id, self.l3)
+                distance = np.sqrt((shepherd.x - self.x) ** 2 + (shepherd.y - self.y) ** 2)
+                if distance < self.uncomfortable_distance: # larger than repulsion distance self.l3:
+                    neighbor_num = neighbor_num + 1
+        if neighbor_num != 0:
+            #genrate Guassion possibility
+            mu = 0.5
+            sigma = 0.1
+            pdf_value= np.random.normal(mu, sigma, 1)
+            if abs(pdf_value - mu) < sigma * neighbor_num:
+                # print(pdf_value, "reverse state")
+                #reverse shepherd state: self.state = 1.0: drive mode;
+                self.state = abs(self.state - 1)
+                # Or change the agent id
+                #self.approach_agent_id
+        return
 
 
     def update_shepherd_forces(self, shepherd_agents):
@@ -290,7 +319,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
     def herd_sheep_agents(self, sheep_agents, n_sheep):
         # drive_mode: attract by the closest sheep agent and the target, repulsion from other shepherd;
         if self.state == 1.0:  #
-            self.color = "cornflowerblue" #support.RED
+            self.color = support.RED
             # drive the closet agent, update the drive agent id;
             self.drive_the_herd_using_vision(sheep_agents, n_sheep)
 
@@ -318,7 +347,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
                         # print("drive:", "max_angle", int(max_angle_target_to_agent/np.pi*180), "delta_angle:", int(delta_angle/np.pi*180), delta_angle)
         else:
             # collect mode
-            self.color = support.RED #"cornflowerblue" #support.RED  #support.BLUE
+            self.color = "cornflowerblue" #support.RED  #support.BLUE
             # update the furthest agent id;
             self.update_collect_agent_id(sheep_agents, n_sheep)
 
@@ -342,16 +371,6 @@ class Shepherd_Agent(pygame.sprite.Sprite):
 
         return
 
-    def coordinating_state(self, shepherd_agents):
-
-        for shepherd in shepherd_agents:
-            if shepherd.id != self.id and self.approach_agent_id == shepherd.approach_agent_id:
-                # compare distance;
-
-                #reverse state
-                self.state = np.abs(self.state - 1)
-                # print("state reversed!")
-        return
 
     def update(self, n_sheep, sheep_agents, shepherd_agents):
         """
@@ -364,9 +383,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.reflect_from_fence()
 
         self.update_shepherd_forces(shepherd_agents)
+        self.explicit_coordinate(shepherd_agents)
         self.herd_sheep_agents(sheep_agents, n_sheep)
-        # explicit rules
-        # self.coordinating_state(shepherd_agents)
+
         # drive/collect the cloest/furtherest agent toward the target;
         # update drive agent force:self.f_drive_agent_x; self.f_drive_agent_y;
         # Note: there is ONLY drive_agent_force now!!!
@@ -411,10 +430,11 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.orientation += (w_dot/self.vt + noise) * self.tick_time #/ (self.vt + 0.0001)
         self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
 
-        # if self.vt < 0:
-        #     self.orientation = self.orientation + np.pi
-        #     self.vt = -self.vt
-        # self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
+        if self.vt < 0:
+            self.orientation = self.orientation + np.pi
+            self.vt = -self.vt
+        self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
+
         self.x += self.vt * np.cos(self.orientation) * self.tick_time
         self.y += self.vt * np.sin(self.orientation) * self.tick_time
 

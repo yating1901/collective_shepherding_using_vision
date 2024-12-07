@@ -171,20 +171,20 @@ class Loop_Function:
                         status = [
                             # f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Drive: {agent.drive_agent_id}",
+                            # f"Drive: {agent.drive_agent_id}",
                             # f"D_x: {agent.drive_point_x:.1f}",
                             # f"D_y: {agent.drive_point_y:.1f}",
-                            f"vt:{agent.vt:.1f}"
+                            # f"vt:{agent.vt:.1f}"
                         ]
                     else:
                         # collect mode
                         status = [
                             # f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Collect: {agent.collect_agent_id}",
+                            # f"Collect: {agent.collect_agent_id}",
                             # f"C_x: {agent.drive_point_x:.1f}",
                             # f"C_y: {agent.drive_point_y:.1f}",
-                            f"vt:{agent.vt:.1f}"
+                            # f"vt:{agent.vt:.1f}"
                         ]
                 for i, stat_i in enumerate(status):
                     text = font.render(stat_i, True, support.BLACK)
