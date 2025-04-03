@@ -13,7 +13,7 @@ class Loop_Function:
     def __init__(self, N_sheep=10, N_shepherd = 1, Time=1000, width=500, height=500,
                  target_place_x = 1000, target_place_y = 1000, target_size = 200,
                  framerate=25, window_pad=30, with_visualization=True, show_animation = False,
-                 agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False):
+                 agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False, uncomfortable_distance = 200, is_explicit = True):
         """
         Initializing the main simulation instance
         :param N: number of agents
@@ -37,7 +37,8 @@ class Loop_Function:
         self.window_pad = window_pad
         self.L3 = L3
         self.robot_loop = robot_loop
-
+        self.uncomfortable_distance = uncomfortable_distance
+        self.is_explicit = is_explicit
         # Simulation parameters
         self.n_sheep = N_sheep
         self.n_shepherd = N_shepherd
@@ -131,9 +132,9 @@ class Loop_Function:
             # pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
             #                  (shepherd_agent.target_x, shepherd_agent.target_y),
             #                  3)
-            # pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
-            #                      (shepherd_agent.drive_point_x, shepherd_agent.drive_point_y),
-            #                      3)
+            pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
+                                 (shepherd_agent.drive_point_x, shepherd_agent.drive_point_y),
+                                 3)
 
 
     def draw_framerate(self):
@@ -169,22 +170,24 @@ class Loop_Function:
                     if agent.state == 1.0:
                         # drive mode
                         status = [
-                            # f"ID: {agent.id[10:]}",
+                            f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            # f"Drive: {agent.drive_agent_id}",
+                            f"Drive: {agent.drive_agent_id}",
                             # f"D_x: {agent.drive_point_x:.1f}",
                             # f"D_y: {agent.drive_point_y:.1f}",
-                            # f"vt:{agent.vt:.1f}"
+                            f"Vt:{agent.vt:.1f}",
+                            f"Switch:{agent.is_switch}",
                         ]
                     else:
                         # collect mode
                         status = [
-                            # f"ID: {agent.id[10:]}",
+                            f"ID: {agent.id[10:]}",
                             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            # f"Collect: {agent.collect_agent_id}",
+                            f"Collect: {agent.collect_agent_id}",
                             # f"C_x: {agent.drive_point_x:.1f}",
                             # f"C_y: {agent.drive_point_y:.1f}",
-                            # f"vt:{agent.vt:.1f}"
+                            f"Vt:{agent.vt:.1f}",
+                            f"Switch:{agent.is_switch}",
                         ]
                 for i, stat_i in enumerate(status):
                     text = font.render(stat_i, True, support.BLACK)
@@ -228,8 +231,8 @@ class Loop_Function:
 
     def add_sheep_agents(self):
         for i in range(self.n_sheep):
-            x = np.random.uniform(100, self.WIDTH/3)
-            y = np.random.uniform(100, self.HEIGHT/3)
+            x = np.random.uniform(100, 350)
+            y = np.random.uniform(100, 350)
             orient = np.random.uniform(-np.pi, np.pi) #(0, 2*np.pi)
             # print(x, y, orient)
             sheep_agent = Sheep_Agent(
@@ -250,8 +253,8 @@ class Loop_Function:
 
     def add_shepherd_agent(self):
         for i in range(self.n_shepherd):
-            x = np.random.uniform(0, 100)
-            y = np.random.uniform(0, 100)
+            x = np.random.uniform(0, 150)
+            y = np.random.uniform(0, 150)
             orient = np.random.uniform(-np.pi, np.pi)
             shepherd_agent = Shepherd_Agent(
                 id="shepherd: " + str(i),
@@ -264,7 +267,9 @@ class Loop_Function:
                 target_x=self.Target_x,
                 target_y=self.Target_y,
                 target_size=self.Target_size,
-                L3=self.L3
+                L3=self.L3,
+                uncomfortable_distance= self.uncomfortable_distance,
+                is_explicit = self.is_explicit,
             )
             self.shepherd_agents.add(shepherd_agent)
             self.agents.add(shepherd_agent)
@@ -363,9 +368,9 @@ class Loop_Function:
 
     def draw_agent_animation(self):
         images_path = os.getcwd() + "/images/"
-        sheep_image = pygame.image.load(images_path + "sheep_1" + ".png")
+        sheep_image = pygame.image.load(images_path + "sheep_2" + ".png")
         # scale factor
-        sheep_scale = 0.05
+        sheep_scale = 0.1
         #sheep_scale_2 = 0.064
         sheep_image = pygame.transform.scale(sheep_image, (
             int(sheep_image.get_width() * sheep_scale), int(sheep_image.get_height() * sheep_scale)))

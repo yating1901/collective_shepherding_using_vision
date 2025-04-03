@@ -79,8 +79,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
         #############################################
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
-        self.v0 = 30
-        self.v_max = 150
+        self.v0 = 50
+        self.v_max = 120 #200
         self.vt = self.v0  # when tick = 0, vt = v0;
         self.v_upper = 2
         self.target_x = target_x
@@ -93,13 +93,13 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.w_dot = 0.0
 
         ##### three zones#####
-        self.rep_distance = 25  #10  #20
-        self.att_distance = 100  #25  #50
-        self.safe_distance = 180  # 150 #130 #65   #200
+        self.rep_distance = 40 #30  #25 #10  #20
+        self.att_distance = 100 #130  #100 #25  #50
+        self.safe_distance = 300  # 180 # 150 #130 #65   #200
         # parameter for force
-        self.K_repulsion = 1600    #60 2
-        self.K_attraction = 1500   #20 0.8  #5.0
-        self.K_shepherd = 4000    #12  1.5
+        self.K_repulsion = 1600 #1200 #1600    #60 2
+        self.K_attraction = 2000 #1600 #2000  #2200   #20 0.8  #5.0
+        self.K_shepherd = 4500    #12  1.5
         self.K_Dr = 0.1  # 0.1 noise_strength
         self.tick_time = 0.01  #0.1
         self.max_turning_angle = np.pi * 2 / 3 #np.pi * 1 / 4
@@ -109,9 +109,11 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.f_att_y = 0.0
         self.num_rep = 0
         self.num_att = 0
-        self.network_type =  "voronoi" #"metric"
+        self.network_type = "metric" #"voronoi" # "metric"
         self.interact_network = []
         self.fov = np.pi #* 4/3
+        self.alpha = 0.1 # heading accelerator
+        self.beta = 0.8  # tuning accelerator
         # self.delta_angle = 0
 
         #####shepherd relative parameters#########
@@ -164,11 +166,11 @@ class Sheep_Agent(pygame.sprite.Sprite):
             voronoi_ridge_points = voronoi.ridge_points
             for point_index in voronoi_ridge_points:
                 if point_index[0] == int(self.id[7:]):
-                    if self.state == agents.sprites()[point_index[1]].state:
-                        self.interact_network.append(point_index[1])
+                    # if self.state == agents.sprites()[point_index[1]].state:
+                    self.interact_network.append(point_index[1])
                 if point_index[1] == int(self.id[7:]):
-                    if self.state == agents.sprites()[point_index[0]].state:
-                        self.interact_network.append(point_index[0])
+                    # if self.state == agents.sprites()[point_index[0]].state:
+                    self.interact_network.append(point_index[0])
             # print(self.id, self.voronoi_network)
         if self.network_type == "metric":
             # self.metric_network = []
@@ -178,8 +180,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
                 y_j = pos[1]
                 distance = np.sqrt((self.x - x_j) ** 2 + (self.y - y_j) ** 2)
                 if distance <= self.att_distance and index != int(self.id[7:]):
-                    if self.state == agents.sprites()[index].state:
-                        self.interact_network.append(index)
+                    # if self.state == agents.sprites()[index].state:
+                    self.interact_network.append(index)
             # print(self.id, self.metric_network)
         # self.Limit_field_of_view(agents)
         return
@@ -195,16 +197,16 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         for neighbor_id in self.interact_network:
             # only interact with same type of agents
-            if self.state == agents.sprites()[neighbor_id].state:
-                neighbor_x = agents.sprites()[neighbor_id].x
-                neighbor_y = agents.sprites()[neighbor_id].y
-                distance = np.sqrt((self.x - neighbor_x) ** 2 + (self.y - neighbor_y) ** 2)
-                if distance <= self.rep_distance:
-                    r_x = r_x + (self.x - neighbor_x) / (distance + 0.000001)
-                    r_y = r_y + (self.y - neighbor_y) / (distance + 0.000001)
-                    self.num_rep += 1
-            else:
-                self.interact_network.remove(neighbor_id)
+            # if self.state == agents.sprites()[neighbor_id].state:
+            neighbor_x = agents.sprites()[neighbor_id].x
+            neighbor_y = agents.sprites()[neighbor_id].y
+            distance = np.sqrt((self.x - neighbor_x) ** 2 + (self.y - neighbor_y) ** 2)
+            if distance <= self.rep_distance:
+                r_x = r_x + (self.x - neighbor_x) / (distance + 0.000001)
+                r_y = r_y + (self.y - neighbor_y) / (distance + 0.000001)
+                self.num_rep += 1
+            # else:
+            #     self.interact_network.remove(neighbor_id)
 
         if self.num_rep != 0:
             self.f_avoid_x = r_x / self.num_rep
@@ -220,16 +222,17 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         for neighbor_id in self.interact_network:
             # only include agents in the same state: moving, staying;
-            if self.state == agents.sprites()[neighbor_id].state:
-                neighbor_x = agents.sprites()[neighbor_id].x
-                neighbor_y = agents.sprites()[neighbor_id].y
-                distance = np.sqrt((self.x - neighbor_x) ** 2 + (self.y - neighbor_y) ** 2)
-                if distance > self.rep_distance:
-                    r_x = r_x + (neighbor_x - self.x) / (distance + 0.000001)
-                    r_y = r_y + (neighbor_y - self.y) / (distance + 0.000001)
-                    self.num_att = self.num_att + 1
-            else:
-                self.interact_network.remove(neighbor_id)
+            # if self.state == agents.sprites()[neighbor_id].state:
+            neighbor_x = agents.sprites()[neighbor_id].x
+            neighbor_y = agents.sprites()[neighbor_id].y
+            distance = np.sqrt((self.x - neighbor_x) ** 2 + (self.y - neighbor_y) ** 2)
+            if distance > self.rep_distance:
+                r_x = r_x + (neighbor_x - self.x) / (distance + 0.000001)
+                r_y = r_y + (neighbor_y - self.y) / (distance + 0.000001)
+                self.num_att = self.num_att + 1
+            # else:
+            #     self.interact_network.remove(neighbor_id)
+
         if self.num_att !=0:
             self.f_att_x = r_x / self.num_att
             self.f_att_y = r_y / self.num_att
@@ -257,6 +260,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.x >= (self.target_x-self.target_size) and self.y >= (self.target_y-self.target_size):
             self.state = "staying"
             self.color = support.LIGHT_BLUE
+            self.v_max = 100
         else:
             self.state = "moving"
             self.color = support.GREEN
@@ -266,24 +270,46 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.orientation = support.reflect_angle(self.orientation)  # [0, 2pi]
         fence_width = 10
         if self.state == "moving":
+            # # Reflection from left fence
+            # if (self.x > self.target_x - self.target_size - fence_width - self.radius) and (self.y >= self.target_y - self.window_pad):
+            #
+            #     self.x = self.target_x - self.target_size - fence_width - 1
+            #
+            #     if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
+            #         self.orientation -= np.pi / 2
+            #     elif 0 <= self.orientation <= np.pi / 2:
+            #         self.orientation += np.pi / 2
+            # # Reflection from upper fence
+            # if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (
+            #         self.x >= self.target_x - self.window_pad):
+            #
+            #     self.y = self.target_y - self.target_size - fence_width - 1
+            #
+            #     if np.pi / 2 <= self.orientation <= np.pi:
+            #         self.orientation += np.pi / 2
+            #     elif 0 <= self.orientation < np.pi / 2:
+            #         self.orientation -= np.pi / 2
             # Reflection from left fence
-            if (self.x > self.target_x - self.target_size - fence_width - self.radius) and (self.y >= self.target_y - self.window_pad):
+            if (self.x > self.target_x - self.target_size - self.radius - fence_width) and (
+                    self.y >= self.target_y - self.window_pad - fence_width):
 
                 self.x = self.target_x - self.target_size - fence_width - 1
 
                 if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
-                    self.orientation -= np.pi / 2
+                    # self.orientation -= np.pi / 2
+                    self.orientation = -np.pi/2
                 elif 0 <= self.orientation <= np.pi / 2:
-                    self.orientation += np.pi / 2
+                    # self.orientation += np.pi / 2
+                    self.orientation = np.pi / 2
             # Reflection from upper fence
             if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (self.x >= self.target_x - self.window_pad):
 
                 self.y = self.target_y - self.target_size - fence_width -1
 
                 if np.pi / 2 <= self.orientation <= np.pi:
-                    self.orientation += np.pi / 2
+                    self.orientation = np.pi
                 elif 0 <= self.orientation < np.pi / 2:
-                    self.orientation -= np.pi / 2
+                    self.orientation = np.pi/2
 
         if self.state == "staying":
             # Reflection from left wall
@@ -391,8 +417,6 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         self.reflect_from_walls()
 
-        self.reflect_from_fence()
-
         self.Get_interaction_network(agents)
 
         self.Limit_field_of_view(agents)
@@ -412,16 +436,6 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.f_x = self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
             self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
-            # self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-            # self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
-
-        # if self.state == "staying":
-        #     if self.num_rep != 0:
-        #         self.f_x = self.f_avoid_x * self.K_repulsion #+ self.f_att_x * self.K_attraction
-        #         self.f_y = self.f_avoid_y * self.K_repulsion #+ self.f_att_y * self.K_attraction
-        #     else:
-        #         self.f_x = self.f_att_x * self.K_attraction
-        #         self.f_y = self.f_att_y * self.K_attraction
 
         self.v_dot = self.f_x * np.cos(self.orientation) + self.f_y * np.sin(self.orientation)
         self.w_dot = -self.f_x * np.sin(self.orientation) + self.f_y * np.cos(self.orientation)
@@ -433,7 +447,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         Dr = np.random.normal(0, 1) * np.sqrt(2 * self.K_Dr) / (self.tick_time ** 0.5)
 
-        self.vt = self.v_dot * self.tick_time + self.vt
+        self.vt = self.v_dot * self.alpha * self.tick_time + self.vt
 
         if self.vt >= self.v_max:
             self.vt = self.v_max
@@ -441,12 +455,14 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.vt = -self.v_max
 
         # self.orientation += (self.w_dot/self.v0 + Dr) * self.tick_time  # 1/self.vt inertia ??
-        self.orientation += (self.w_dot/self.vt + Dr) * self.tick_time#(self.w_dot / (self.vt + 0.0001) + Dr) * self.tick_time
+        self.orientation += (self.w_dot * self.beta / self.vt + Dr) * self.tick_time#(self.w_dot / (self.vt + 0.0001) + Dr) * self.tick_time
         self.orientation = support.transform_angle(self.orientation)    # [-pi, pi]
 
         if self.vt < 0:
             self.orientation = self.orientation + np.pi
             self.vt = -self.vt
+
+        self.reflect_from_fence()
         self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
 
         self.x += self.vt * np.cos(self.orientation)* self.tick_time

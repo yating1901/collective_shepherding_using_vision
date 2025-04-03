@@ -11,7 +11,7 @@ import os, json
 ### Supplementary Parameters ###
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-BLUE = (0, 100, 255)
+BLUE = "cornflowerblue" #(0, 100, 255)
 LIGHT_BLUE = (173, 216, 230)
 GREEN = (50, 150, 50)
 PURPLE = (130, 0, 130)

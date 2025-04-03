@@ -10,9 +10,11 @@ TICK = 1
 Iterations = 10000
 
 N_sheep = 80
-N_shepherd = 3
-L3 = 50
-Fps = 25
+N_shepherd = 2
+L3 = 150   # minimum repulsion distance with other shepherds;
+Fps = 100
+Uncomfortable_distance = 300
+Is_Explicit = False
 Robot_Loop = False
 Show_Animation = False
 
@@ -33,7 +35,9 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               agent_radius= 10,  # 10 Agent radius in pixels
                               L3 = L3,  # repulsion distance
                               robot_loop = Robot_Loop,
-                              physical_obstacle_avoidance=False)
+                              physical_obstacle_avoidance=False,
+                              uncomfortable_distance = Uncomfortable_distance,
+                              is_explicit = Is_Explicit)
 
 # we loop through all the agents of the created simulation
 print("Setting parameters for agent", end = ' ')
