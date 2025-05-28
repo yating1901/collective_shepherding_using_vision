@@ -3,6 +3,7 @@ agent.py : including the main classes to create an agent. Supplementary calculat
             are removed from this file.
 """
 import math
+import os
 from math import atan2
 
 import pygame
@@ -11,6 +12,7 @@ import numpy as np
 
 import support
 
+import matplotlib.pyplot as plt
 
 #from scipy.stats import norm
 
@@ -89,12 +91,15 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.drive_agent_id = 0
         self.collect_agent_id = 0
         self.approach_agent_id = 0
-        self.Angle_Threshold_Collection = np.pi / 3  #np.pi / 2  # HALF FOV threshold for collect mode;
-        self.Angle_Threshold_Drive = np.pi/6  #np.pi/6
+        self.Angle_Threshold_Collection = np.pi / 2  #np.pi / 3  # HALF FOV threshold for collect mode;
+        self.Angle_Threshold_Drive = np.pi/6  #np.pi/8
         self.fov = np.pi * 2/3      # Relative FOV threshold for sensing other shepherd;
         self.max_turning_angle = np.pi /2
         self.uncomfortable_distance = uncomfortable_distance
 
+        self.main_projection = np.zeros(shape=(3, 2))
+        ## line: :0: projection of the target *; 1: sheep agent; 2: center of the mass ^
+        ## raw: # 0: projection_pos, 1: projection_half_wid;
 
         self.num_rep = 0
         self.f_x_other_shepherd = 0.0
@@ -110,7 +115,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.f_drive_agent_x = 0.0
         self.f_drive_agent_y = 0.0
 
-        self.K_drive_sheep = 100 #100
+        self.K_drive_sheep = 200
         self.K_other_shepherd = 1000
         # Showing agent orientation with a line towards agent orientation
         pygame.draw.line(self.image, support.BACKGROUND, (radius, radius),
@@ -270,6 +275,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # the drive force is linear to the distance between the shepherd and the drive point;
         self.f_drive_agent_x = distance_drive_herd * np.cos(angle_drive_herd)  # angle_drive_herd: from shepherd to drive point;
         self.f_drive_agent_y = distance_drive_herd * np.sin(angle_drive_herd)  #
+
         return
 
     def drive_the_herd_using_vision(self, sheep_agents, n_sheep):
@@ -284,6 +290,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         drive_agent_id = np.argmax(agents_projection[:, 1], axis=0)
         self.drive_agent_id = drive_agent_id
 
+        # update the driven sheep projection to the shepherd
+        self.main_projection[1][0] = agents_projection[drive_agent_id][0]
+        self.main_projection[1][1] = agents_projection[drive_agent_id][1]
         return
 
 
@@ -293,6 +302,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         dirt_angles_of_target_to_agent = np.zeros(n_sheep)
 
         r_target, angle_target_herd = self.calculate_relative_distance_angle(self.target_x, self.target_y, self.x, self.y)
+        # update the target projection to the shepherd
+        self.main_projection[0][0] = angle_target_herd
+
         agent_index = 0
         for agent in sheep_agents:
             # the furthest agent should only in the moving state;
@@ -320,6 +332,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # careful: collect_agent_id is a float type
         angle_difference_agent_mass = np.abs(agents_projection[int(self.collect_agent_id), 0] - center_of_mass_projection)
 
+        # update the center of the mass projection to the shepherd
+        self.main_projection[2][0] = center_of_mass_projection
+
         return angle_difference_agent_mass
 
     def update_collect_agent_id(self, sheep_agents, n_sheep):
@@ -335,6 +350,14 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         if current_angle_difference_agent_mass * next_angle_difference_agent_mass >= 0:
             self.collect_agent_id = next_max_agent_index
             # print(current_angle_difference_agent_mass, next_angle_difference_agent_mass)
+
+        # update the collect sheep projection to the shepherd
+        self.main_projection[1][0] = agents_projection[self.collect_agent_id][0]
+        self.main_projection[1][1] = agents_projection[self.collect_agent_id][1]
+
+        # update the center of the mass projection to the shepherd
+        self.main_projection[2][0] = center_of_mass_projection
+
         return
 
 
@@ -394,7 +417,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         return
 
 
-    def update(self, n_sheep, sheep_agents, shepherd_agents):
+    def update(self, n_sheep, sheep_agents, shepherd_agents, tick):
         """
         main update method of the agent. This method is called in every timestep to calculate the new state/position
         of the agent and visualize it in the environment
@@ -456,6 +479,8 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # updating agent visualization
         self.draw_update()
 
+        self.plot_vision_projection(tick)
+
     def draw_update(self):
         """
         updating the outlook of the agent according to position and orientation
@@ -488,7 +513,6 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # Boundary conditions according to center of agent (simple)
         self.orientation = support.reflect_angle(self.orientation)  # [0, 2pi]
         fence_width = 10
-        # if self.state == "moving":
             # Reflection from left fence
         if (self.x > self.target_x - self.target_size/2 - fence_width) and (
                 self.y >= self.target_y - self.window_pad):
@@ -509,26 +533,6 @@ class Shepherd_Agent(pygame.sprite.Sprite):
                 self.orientation += np.pi / 2
             elif 0 <= self.orientation < np.pi / 2:
                 self.orientation -= np.pi / 2
-
-        # if self.state == "staying":
-        #     # Reflection from left wall
-        #     if (self.x < self.target_x - self.target_size + fence_width) and (
-        #             self.y >= self.target_y - self.window_pad):
-        #         self.x = self.target_x - self.target_size + fence_width + 1
-        #         if np.pi / 2 <= self.orientation < np.pi:
-        #             self.orientation -= np.pi / 2
-        #         elif np.pi <= self.orientation <= 3 * np.pi / 2:
-        #             self.orientation += np.pi / 2
-        #
-        #     # Reflection from upper wall
-        #     if (self.y < self.target_y - self.target_size + fence_width) and (
-        #             self.x >= self.target_x - self.window_pad):
-        #         self.y = self.target_y - self.target_size + fence_width + 1
-        #         if np.pi < self.orientation <= np.pi * 3 / 2:
-        #             self.orientation -= np.pi / 2
-        #         elif np.pi * 3 / 2 < self.orientation <= np.pi * 2:
-        #             self.orientation += np.pi / 2
-        # self.prove_orientation()  # bounding orientation into 0 and 2pi
 
         self.orientation = support.reflect_angle(self.orientation)
 
@@ -607,6 +611,44 @@ class Shepherd_Agent(pygame.sprite.Sprite):
             self.orientation = 2 * np.pi + self.orientation
         if self.orientation > np.pi * 2:
             self.orientation = self.orientation - 2 * np.pi
+
+    def step_function(self, x, pos, wid):
+        # return np.where(((pos + wid) >= x >= (pos - wid)).any(), 1, 0) # x: [-pi, pi]
+        return np.where(np.logical_and((pos + wid) >= x, x >= (pos - wid)), 1, 0)
+
+    def plot_vision_projection(self, tick):
+        folder_path = os.getcwd() + "/projections/"
+        # plt.cla()
+        plt.figure(figsize=(5, 4)) #(3, 2)
+        ax = plt.gca()
+        ax.set_aspect("equal", adjustable="box")
+        X = np.linspace(-np.pi, np.pi, 10000)
+        left, bottom, width, height = 0.6, 0.15, 0.1, 0.16
+        # plot agents' projection;
+        Y1 = self.step_function(X, self.main_projection[1][0],
+                      self.main_projection[1][1])  # 0: projection_pos, 1: projection_half_wid;
+
+        if self.state == 1: # drive mode
+            ax.plot(X, Y1, color="red")
+            ax.legend(["D:" + str(int(self.drive_agent_id))], loc='upper right')
+        else:
+            ax.plot(X, Y1, color="blue")
+            ax.legend(["C:" + str(int(self.collect_agent_id))], loc='upper right')
+
+        ## plot pos of the center of the mass projection
+        ax.plot(self.main_projection[2][0], 1.25, "r^")
+        plt.axvline(self.main_projection[2][0],color='r')
+        # plot target projection
+        ax.plot(self.main_projection[0][0], 1.25, "b*")
+        plt.axvline(self.main_projection[0][0], color='b')
+
+        ax.set_title("Vision field of shepherd", fontsize=10)
+        ax.set_xlim(xmin=-np.pi, xmax=np.pi)
+        ax.set_ylim(ymin=0, ymax=1.4)#1.4)
+        # plt.show()
+        plt.savefig(folder_path + str(tick) + ".png")
+        plt.clf()
+        plt.close()
 
     # def prove_velocity(self):
     #     """Restricting the absolute velocity of the agent"""

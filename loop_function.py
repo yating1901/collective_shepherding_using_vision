@@ -8,6 +8,7 @@ from sheep_agent import Sheep_Agent
 from shepherd_agent import Shepherd_Agent
 import support
 import os, json
+import matplotlib.pyplot as plt
 
 class Loop_Function:
     def __init__(self, N_sheep=10, N_shepherd = 1, Time=1000, width=500, height=500,
@@ -106,10 +107,14 @@ class Loop_Function:
         # pygame.draw.circle(self.screen, support.GREY, [self.Target_x, self.Target_y], radius=self.Target_size)
         # pygame.draw.rect(self.screen, support.GREY, (self.Target_x-self.Target_size, self.Target_y-self.Target_size, self.Target_size*2 + self.window_pad, self.Target_size*2 + self.window_pad), 1)
         pygame.draw.line(self.screen, support.YELLOW, [self.Target_x-self.window_pad, self.Target_y-self.Target_size], [self.Target_x+self.Target_size+ self.window_pad, self.Target_y-self.Target_size], width=5)
+
         pygame.draw.line(self.screen, support.YELLOW,
                          [self.Target_x-self.Target_size, self.Target_y - self.window_pad],
                          [self.Target_x-self.Target_size, self.Target_y + self.Target_size + self.window_pad],
                          width=5)
+
+        pygame.draw.circle(self.screen, support.GREY,(self.Target_x - self.Target_size/2, self.Target_y- self.Target_size/2), 10)
+
 
     ################## show network##################################
     def draw_network(self):
@@ -128,10 +133,11 @@ class Loop_Function:
             # pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
             #                  (target_agent_x, target_agent_y),
             #                  3)
-
+            #draw the line between shepherd and target place
             # pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
             #                  (shepherd_agent.target_x, shepherd_agent.target_y),
             #                  3)
+            #draw the line between shepherd and driving/collecting agent
             pygame.draw.line(self.screen, "cornflowerblue", (shepherd_agent.x, shepherd_agent.y),
                                  (shepherd_agent.drive_point_x, shepherd_agent.drive_point_y),
                                  3)
@@ -166,37 +172,38 @@ class Loop_Function:
                         # f"vt:{agent.vt:.1f}",
                     ]
                 else:
-                    # shepherd agent
-                    if agent.state == 1.0:
-                        # drive mode
-                        status = [
-                            f"ID: {agent.id[10:]}",
-                            # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Drive: {agent.drive_agent_id}",
-                            # f"D_x: {agent.drive_point_x:.1f}",
-                            # f"D_y: {agent.drive_point_y:.1f}",
-                            f"Vt:{agent.vt:.1f}",
-                            f"Switch:{agent.is_switch}",
-                        ]
-                    else:
-                        # collect mode
-                        status = [
-                            f"ID: {agent.id[10:]}",
-                            # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
-                            f"Collect: {agent.collect_agent_id}",
-                            # f"C_x: {agent.drive_point_x:.1f}",
-                            # f"C_y: {agent.drive_point_y:.1f}",
-                            f"Vt:{agent.vt:.1f}",
-                            f"Switch:{agent.is_switch}",
-                        ]
-                for i, stat_i in enumerate(status):
-                    text = font.render(stat_i, True, support.BLACK)
-                    if agent.id[0:5] == "sheep":
-                        self.screen.blit(text, (agent.x - 5 * agent.radius,
-                                            agent.y - 5 * agent.radius + i * (font_size + spacing)))
-                    else:
-                        self.screen.blit(text, (agent.x + 2 * agent.radius,
-                                                agent.y + 2 * agent.radius + i * (font_size + spacing)))
+                    pass
+                #     # shepherd agent
+                #     if agent.state == 1.0:
+                #         # drive mode
+                #         status = [
+                #             f"ID: {agent.id[10:]}",
+                #             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
+                #             f"Drive: {agent.drive_agent_id}",
+                #             # f"D_x: {agent.drive_point_x:.1f}",
+                #             # f"D_y: {agent.drive_point_y:.1f}",
+                #             f"Vt:{agent.vt:.1f}",
+                #             f"Switch:{agent.is_switch}",
+                #         ]
+                #     else:
+                #         # collect mode
+                #         status = [
+                #             f"ID: {agent.id[10:]}",
+                #             # f"ori.: {180 * (agent.orientation / np.pi):.2f}",
+                #             f"Collect: {agent.collect_agent_id}",
+                #             # f"C_x: {agent.drive_point_x:.1f}",
+                #             # f"C_y: {agent.drive_point_y:.1f}",
+                #             f"Vt:{agent.vt:.1f}",
+                #             f"Switch:{agent.is_switch}",
+                #         ]
+                # for i, stat_i in enumerate(status):
+                #     text = font.render(stat_i, True, support.BLACK)
+                #     if agent.id[0:5] == "sheep":
+                #         self.screen.blit(text, (agent.x - 5 * agent.radius,
+                #                             agent.y - 5 * agent.radius + i * (font_size + spacing)))
+                #     else:
+                #         self.screen.blit(text, (agent.x + 2 * agent.radius,
+                #                                 agent.y + 2 * agent.radius + i * (font_size + spacing)))
 
     def agent_agent_collision(self, agent1, agent2):
         """collision protocol called on any agent that has been collided with another one
@@ -253,8 +260,8 @@ class Loop_Function:
 
     def add_shepherd_agent(self):
         for i in range(self.n_shepherd):
-            x = np.random.uniform(0, 150)
-            y = np.random.uniform(0, 150)
+            x = np.random.uniform(0, 200) #(0, 150)
+            y = np.random.uniform(300, 400)
             orient = np.random.uniform(-np.pi, np.pi)
             shepherd_agent = Shepherd_Agent(
                 id="shepherd: " + str(i),
@@ -366,6 +373,21 @@ class Loop_Function:
         else:
             self.agents.draw(self.screen)
 
+        self.add_projection()
+
+        self.save_arena_image()
+
+    def add_projection(self):
+        folder_path = os.getcwd() + "/projections/"
+        subfig = folder_path + str(self.tick-1)+".png"
+        plot_image = pygame.image.load(subfig).convert()
+        plot_rect = plot_image.get_rect(center=(800, 200))
+        self.screen.blit(plot_image, plot_rect)
+
+    def save_arena_image(self):
+        folder_path = os.getcwd() + "/snapshots/"
+        pygame.image.save(self.screen,folder_path + str(self.tick)+".png")
+
     def draw_agent_animation(self):
         images_path = os.getcwd() + "/images/"
         sheep_image = pygame.image.load(images_path + "sheep_2" + ".png")
@@ -462,7 +484,7 @@ class Loop_Function:
 
                 # Update agents
                 self.sheep_agents.update(self.sheep_agents, self.shepherd_agents)
-                self.shepherd_agents.update(self.n_sheep, self.sheep_agents, self.shepherd_agents)
+                self.shepherd_agents.update(self.n_sheep, self.sheep_agents, self.shepherd_agents, self.tick)
 
                 #update drive_point_x,y, robot state
                 if self.robot_loop:

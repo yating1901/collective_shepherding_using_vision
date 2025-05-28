@@ -79,8 +79,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
         #############################################
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
-        self.v0 = 50
-        self.v_max = 120 #200
+        self.v0 = 0
+        self.v_max = 100 #200
         self.vt = self.v0  # when tick = 0, vt = v0;
         self.v_upper = 2
         self.target_x = target_x
@@ -93,14 +93,14 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.w_dot = 0.0
 
         ##### three zones#####
-        self.rep_distance = 40 #30  #25 #10  #20
-        self.att_distance = 100 #130  #100 #25  #50
-        self.safe_distance = 300  # 180 # 150 #130 #65   #200
+        self.rep_distance = 30 #30  #25 #10  #20
+        self.att_distance = 120 #130  #100 #25  #50
+        self.safe_distance = 300 #300  # 180 # 150 #130 #65   #200
         # parameter for force
-        self.K_repulsion = 1600 #1200 #1600    #60 2
-        self.K_attraction = 2000 #1600 #2000  #2200   #20 0.8  #5.0
-        self.K_shepherd = 4500    #12  1.5
-        self.K_Dr = 0.1  # 0.1 noise_strength
+        self.K_repulsion = 2800 #2800  #1200 #1600    #60 2
+        self.K_attraction = 5000 #2200 #2000 #1600 #2000  #2200   #20 0.8  #5.0
+        self.K_shepherd = 6000 #3500 #4500    #12  1.5
+        self.K_Dr = 0.01  # 0.1 noise_strength
         self.tick_time = 0.01  #0.1
         self.max_turning_angle = np.pi * 2 / 3 #np.pi * 1 / 4
         self.f_avoid_x = 0.0
@@ -109,11 +109,11 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.f_att_y = 0.0
         self.num_rep = 0
         self.num_att = 0
-        self.network_type = "metric" #"voronoi" # "metric"
+        self.network_type = "voronoi" #"voronoi" # "metric"
         self.interact_network = []
-        self.fov = np.pi #* 4/3
-        self.alpha = 0.1 # heading accelerator
-        self.beta = 0.8  # tuning accelerator
+        self.fov = np.pi *  4/3
+        self.alpha = 1 #0.1 # heading accelerator
+        self.beta = 1 #0.8  # tuning accelerator
         # self.delta_angle = 0
 
         #####shepherd relative parameters#########
@@ -427,7 +427,18 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         self.Get_attraction_force(agents)
 
-        # if self.state == "moving":
+        # if self.network_type == "voronoi":
+        #     self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
+        #     self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
+        # else:
+        #     if self.num_rep != 0:
+        #         self.f_x = self.f_avoid_x * self.K_repulsion
+        #         self.f_y = self.f_avoid_y * self.K_repulsion
+        #     else:
+        #         self.f_x = self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
+        #         self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
+        # self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
+        # self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
         if self.num_rep != 0:
             self.f_x = self.f_avoid_x * self.K_repulsion
