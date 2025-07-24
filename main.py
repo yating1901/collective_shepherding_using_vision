@@ -11,10 +11,10 @@ Boundary_y = Target_place_y + Target_size
 TICK = 1
 Iterations = 10000
 
-N_sheep = 60
+N_sheep = 100
 N_shepherd = 1
 L3 = 400   # minimum repulsion distance with other shepherds;
-Fps = 100
+Fps = 25
 Uncomfortable_distance = 500
 Is_Explicit = False
 Robot_Loop = False
@@ -42,7 +42,7 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               is_explicit = Is_Explicit)
 
 # we loop through all the agents of the created simulation
-print("Setting parameters for agent", end = ' ')
+# print("Setting parameters for agent", end = ' ')
 
 
 folder_path = os.getcwd() + "/snapshots"

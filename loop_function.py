@@ -52,6 +52,7 @@ class Loop_Function:
         self.is_paused = False
         self.show_zones = False
         self.physical_collision_avoidance = physical_obstacle_avoidance
+        #self.last_pause_tick = 0
 
         # Agent parameters
         self.agent_radii = agent_radius
@@ -149,10 +150,11 @@ class Loop_Function:
         line_height = int(self.window_pad / 2)
         font = pygame.font.Font(None, line_height)
         status = [
-            f"FPS: {self.framerate}, t = {self.tick}/{self.Time}",
+            f"FPS: {self.framerate}, tick = {self.tick}/{self.Time}",
         ]
         if self.is_paused:
-            status.append("-Paused-")
+            status.append("Last starting tick: " + str(self.last_pause_tick)+" Last duration: " + str(self.current_simulation_time) +" s")
+
         for i, stat_i in enumerate(status):
             text = font.render(stat_i, True, support.BLACK)
             self.screen.blit(text, (tab_size, i * line_height))
@@ -316,6 +318,15 @@ class Loop_Function:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 self.is_paused = not self.is_paused
 
+                self.pause_time = datetime.now()
+                self.current_simulation_time = (self.pause_time - self.last_pause_time).total_seconds()
+                self.last_pause_time = self.pause_time
+
+                self.last_pause_tick = self.current_pause_tick
+                self.current_pause_tick = self.tick
+                print(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Gap time between two pauses: ",
+                      self.current_simulation_time)
+
             # Speed up on s and down on f. reset default framerate with d
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 self.framerate -= 5
@@ -365,7 +376,7 @@ class Loop_Function:
             self.draw_agent_zones()
 
         self.draw_framerate()
-        self.draw_agent_stats()
+        # self.draw_agent_stats()
 
         if self.show_animation:
             self.draw_background()
@@ -373,9 +384,9 @@ class Loop_Function:
         else:
             self.agents.draw(self.screen)
 
-        self.add_projection()
+        # self.add_projection()
 
-        self.save_arena_image()
+        # self.save_arena_image()
 
     def add_projection(self):
         folder_path = os.getcwd() + "/projections/"
@@ -440,7 +451,9 @@ class Loop_Function:
     def start(self):
 
         start_time = datetime.now()
-        print(f"Running simulation start method!")
+        self.last_pause_time = datetime.now()
+        self.current_pause_tick = 0
+        #print(f"Running simulation start method!")
 
         print("Starting main simulation loop!")
         # Main Simulation loop until dedicated simulation time
@@ -505,6 +518,8 @@ class Loop_Function:
                     with open("virtual_robot.json", "w") as outfile:
                         json.dump(virtual_robot_data, outfile)
 
+                # save data
+                #with open()
                 # move to next simulation timestep
                 self.tick += 1
 
