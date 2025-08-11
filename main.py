@@ -11,14 +11,15 @@ Boundary_y = Target_place_y + Target_size
 TICK = 1
 Iterations = 10000
 
-N_sheep = 100
-N_shepherd = 1
+N_sheep = 20
+N_shepherd = 2
 L3 = 400   # minimum repulsion distance with other shepherds;
 Fps = 25
 Uncomfortable_distance = 500
 Is_Explicit = False
 Robot_Loop = False
 Show_Animation = False
+Save_data = True
 
 from loop_function import Loop_Function
 
@@ -32,14 +33,15 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               target_size = Target_size,
                               framerate=Fps,
                               window_pad=30,
-                              with_visualization = True,
+                              with_visualization = False,
                               show_animation = Show_Animation,
                               agent_radius= 10,  # 10 Agent radius in pixels
                               L3 = L3,  # repulsion distance
                               robot_loop = Robot_Loop,
                               physical_obstacle_avoidance=False,
                               uncomfortable_distance = Uncomfortable_distance,
-                              is_explicit = Is_Explicit)
+                              is_explicit = Is_Explicit,
+                              is_saving_data = Save_data)
 
 # we loop through all the agents of the created simulation
 # print("Setting parameters for agent", end = ' ')
@@ -55,6 +57,11 @@ pngs = glob.glob(os.path.join(folder_path, "*.png"))
 for file_path in pngs:
     os.remove(file_path)
 
+with open('shepherd_agent_data.json', 'w') as f:
+    f.write('')
+
+with open('sheep_agent_data.json', 'w') as f:
+    f.write('')
 # Now we can start the simulation with the changed agents
 loop_function.start()
 

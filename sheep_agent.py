@@ -473,7 +473,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.orientation = self.orientation + np.pi
             self.vt = -self.vt
 
-        self.reflect_from_fence()
+        #self.reflect_from_fence()
         self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
 
         self.x += self.vt * np.cos(self.orientation)* self.tick_time

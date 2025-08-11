@@ -14,7 +14,8 @@ class Loop_Function:
     def __init__(self, N_sheep=10, N_shepherd = 1, Time=1000, width=500, height=500,
                  target_place_x = 1000, target_place_y = 1000, target_size = 200,
                  framerate=25, window_pad=30, with_visualization=True, show_animation = False,
-                 agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False, uncomfortable_distance = 200, is_explicit = True):
+                 agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False,
+                 uncomfortable_distance = 200, is_explicit = True, is_saving_data = False):
         """
         Initializing the main simulation instance
         :param N: number of agents
@@ -52,6 +53,7 @@ class Loop_Function:
         self.is_paused = False
         self.show_zones = False
         self.physical_collision_avoidance = physical_obstacle_avoidance
+        self.is_saving_data = is_saving_data
         #self.last_pause_tick = 0
 
         # Agent parameters
@@ -70,7 +72,7 @@ class Loop_Function:
         self.add_sheep_agents()
         self.add_shepherd_agent()
 
-        self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
+        #self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
         self.clock = pygame.time.Clock()
 
     def draw_background(self):
@@ -375,7 +377,7 @@ class Loop_Function:
         if self.show_zones:
             self.draw_agent_zones()
 
-        self.draw_framerate()
+        #self.draw_framerate()
         # self.draw_agent_stats()
 
         if self.show_animation:
@@ -448,6 +450,48 @@ class Loop_Function:
             robot_data = json.load(f)
         return robot_data
 
+    def save_shepherd_agents_data(self):
+        shepherd_agents_data = []
+        for shepherd_agent in self.shepherd_agents:
+            if shepherd_agent.state == 1.0:
+                Mode = "driving"
+            else:
+                Mode = "collecting"
+
+            agent_data = {"tick": self.tick,
+                           "ID": shepherd_agent.id[10:],
+                           "x": float("{:.2f}".format(shepherd_agent.x)),
+                           "y": float("{:.2f}".format(shepherd_agent.y)),
+                           "heading_direction": float("{:.2f}".format(shepherd_agent.orientation)),
+                           "approach_sheep_id": int(shepherd_agent.approach_agent_id),
+                           "MODE": Mode,
+                           }
+            shepherd_agents_data.append(agent_data)
+        # be careful when it is paused or killed, the save should have been saved already, check the time line!
+        with open("shepherd_agent_data.json", "a") as outfile:
+            json.dump(shepherd_agents_data, outfile)
+            outfile.write("\n")
+
+        return
+
+    def save_sheep_agents_data(self):
+        sheep_agents_data = []
+        for sheep_agent in self.sheep_agents:
+            agent_data = {"tick": self.tick,
+                           "ID": sheep_agent.id[7:],
+                           "x": float("{:.2f}".format(sheep_agent.x)),
+                           "y": float("{:.2f}".format(sheep_agent.y)),
+                           "heading_direction": float("{:.2f}".format(sheep_agent.orientation)),
+                           "state:": sheep_agent.state,
+                           }
+            sheep_agents_data.append(agent_data)
+        # be careful when it is paused or killed, the save should have been saved already, check the time line!
+        with open("sheep_agent_data.json", "a") as outfile:
+            json.dump(sheep_agents_data, outfile)
+            outfile.write("\n")
+
+        return
+
     def start(self):
 
         start_time = datetime.now()
@@ -519,7 +563,9 @@ class Loop_Function:
                         json.dump(virtual_robot_data, outfile)
 
                 # save data
-                #with open()
+                if self.is_saving_data:
+                    self.save_shepherd_agents_data()
+                    self.save_sheep_agents_data()
                 # move to next simulation timestep
                 self.tick += 1
 
@@ -528,11 +574,24 @@ class Loop_Function:
                 self.draw_frame()
                 pygame.display.flip()
 
-            # # Moving time forward !useful!
+            # Moving time forward !useful!
             # if self.tick % 100 == 0 or self.tick == 1:
             #     print(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} t={self.tick}")
             #     print(f"Simulation FPS: {self.clock.get_fps()}")
             self.clock.tick(self.framerate)
+
+            all_sheep_states = 0.0
+            for sheep_agent in self.sheep_agents:
+                if sheep_agent.state == "moving":
+                    all_sheep_states =  all_sheep_states + 1
+            if all_sheep_states == 0.0:
+                end_time = datetime.now()
+                print("Final tick: ", str(self.tick),
+                      f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Total simulation time: ",
+                      (end_time - start_time).total_seconds())
+
+                pygame.quit()
+                break
 
         end_time = datetime.now()
         print(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Total simulation time: ",
