@@ -3,7 +3,7 @@ BASE_OUTPUT="results"
 mkdir -p "BASE_OUTPUT"
 
 JOBS=()
-Iterations=1000000
+Iterations=100
 L3=50
 N_shepherd=1
 # -----------------------------
@@ -17,7 +17,6 @@ do
     mkdir -p "$OUTPUT_FOLDER"
     # Store the job as a string: "A REP OUTPUT_FOLDER"
     JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
-
     #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
   done
 done
@@ -37,7 +36,10 @@ for JOB in "${JOBS[@]}"; do
 
     echo "Launching job N_sheep=$N_sheep rep=$Repetition"
 
-    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
+#    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
+    # Redirect both stdout and stderr to a file
+    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
+
     i=$((i+1))
 done
 

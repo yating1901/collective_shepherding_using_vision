@@ -593,7 +593,7 @@ class Loop_Function:
                     all_sheep_states =  all_sheep_states + 1
             if all_sheep_states == 0.0:
                 end_time = datetime.now()
-                print("Final tick: ", str(self.tick),
+                print("Final tick:", str(self.tick),
                       f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Total simulation time: ",
                       (end_time - start_time).total_seconds())
 
@@ -601,7 +601,7 @@ class Loop_Function:
                 break
 
         end_time = datetime.now()
-        print(f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Total simulation time: ",
+        print("Final tick:", str(self.tick), f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S.%f')} Total simulation time: ",
               (end_time - start_time).total_seconds())
 
         pygame.quit()

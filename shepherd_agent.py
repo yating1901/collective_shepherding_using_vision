@@ -479,7 +479,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # updating agent visualization
         self.draw_update()
 
-        self.plot_vision_projection(tick)
+        #self.plot_vision_projection(tick)
 
     def draw_update(self):
         """
