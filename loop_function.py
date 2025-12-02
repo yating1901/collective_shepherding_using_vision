@@ -453,25 +453,25 @@ class Loop_Function:
     def save_shepherd_agents_data(self):
         shepherd_agents_data = []
         for shepherd_agent in self.shepherd_agents:
-            if shepherd_agent.state == 1.0:
-                Mode = "driving"
-            else:
-                Mode = "collecting"
-
             agent_data = {"tick": self.tick,
                            "ID": shepherd_agent.id[10:],
                            "x": float("{:.2f}".format(shepherd_agent.x)),
                            "y": float("{:.2f}".format(shepherd_agent.y)),
                            "heading_direction": float("{:.2f}".format(shepherd_agent.orientation)),
                            "approach_sheep_id": int(shepherd_agent.approach_agent_id),
-                           "MODE": Mode,
+                           "MODE": float("{:.2f}".format(shepherd_agent.state)),
                            }
             shepherd_agents_data.append(agent_data)
+        # try to save at different folder path
+        out_dir = os.environ.get("OUTPUT_DIR", "results/default")
+        os.makedirs(out_dir, exist_ok=True)
+        # file_name = "shepherd_" + str(self.n_shepherd)+"_data.json"
+        file_name = "shepherd_data.json"
+        filepath = os.path.join(out_dir, file_name)
         # be careful when it is paused or killed, the save should have been saved already, check the time line!
-        with open("shepherd_agent_data.json", "a") as outfile:
+        with open(filepath, "a") as outfile:
             json.dump(shepherd_agents_data, outfile)
             outfile.write("\n")
-
         return
 
     def save_sheep_agents_data(self):
@@ -485,8 +485,15 @@ class Loop_Function:
                            "state:": sheep_agent.state,
                            }
             sheep_agents_data.append(agent_data)
+        # try to save at different folder path
+        out_dir = os.environ.get("OUTPUT_DIR", "results/default")
+        os.makedirs(out_dir, exist_ok=True)
+        # file_name = "sheep_"+ str(self.n_sheep)+"_data.json"
+        file_name = "sheep_data.json"
+        filepath = os.path.join(out_dir, file_name)
         # be careful when it is paused or killed, the save should have been saved already, check the time line!
-        with open("sheep_agent_data.json", "a") as outfile:
+        with open(filepath, "a") as outfile:
+        #with open("sheep_agent_data.json", "a") as outfile:
             json.dump(sheep_agents_data, outfile)
             outfile.write("\n")
 
@@ -499,7 +506,7 @@ class Loop_Function:
         self.current_pause_tick = 0
         #print(f"Running simulation start method!")
 
-        print("Starting main simulation loop!")
+        # print("Starting main simulation loop!")
         # Main Simulation loop until dedicated simulation time
         while self.tick < self.Time:
 

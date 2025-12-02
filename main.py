@@ -19,7 +19,7 @@ Uncomfortable_distance = 500
 Is_Explicit = False
 Robot_Loop = False
 Show_Animation = False
-Save_data = True
+Save_data = False
 
 from loop_function import Loop_Function
 

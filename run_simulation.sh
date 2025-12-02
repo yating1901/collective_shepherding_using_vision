@@ -1,0 +1,45 @@
+#!/bin/bash
+BASE_OUTPUT="results"
+mkdir -p "BASE_OUTPUT"
+
+JOBS=()
+Iterations=10
+L3=50
+N_shepherd=1
+# -----------------------------
+# Generate JOBS
+# -----------------------------
+for N_sheep in $(seq 100 100 200)   # Sheep numbers
+do
+  for Repetition in $(seq 1 1 2)    # Shepherd numbers
+  do
+    OUTPUT_FOLDER="$BASE_OUTPUT/N_sheep_$N_sheep/rep_$Repetition"
+    mkdir -p "$OUTPUT_FOLDER"
+    # Store the job as a string: "A REP OUTPUT_FOLDER"
+    JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
+
+    #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
+  done
+done
+
+i=0
+for JOB in "${JOBS[@]}"; do
+    # Parse fields: $A $REP $OUTPUT_FOLDER
+    set -- $JOB
+    N_sheep=$1
+    N_shepherd=$2
+    Iterations=$3
+    L3=$4
+    Repetition=$5
+    OUTPUT_FOLDER=$6
+
+    mkdir -p "$OUTPUT_FOLDER"
+
+    echo "Launching job N_sheep=$N_sheep rep=$Repetition"
+
+    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
+    i=$((i+1))
+done
+
+wait
+echo "Number of total runs: $i"
