@@ -3,7 +3,7 @@ BASE_OUTPUT="results"
 mkdir -p "BASE_OUTPUT"
 
 JOBS=()
-Iterations=10
+Iterations=1000000
 L3=50
 N_shepherd=1
 # -----------------------------
