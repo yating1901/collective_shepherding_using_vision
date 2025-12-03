@@ -3,24 +3,26 @@ BASE_OUTPUT="results"
 mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
-Iterations=100
+Iterations=10
 L3=50
 N_shepherd=1
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for N_sheep in $(seq 50 50 200)   # Sheep numbers
+for N_shepherd in $(seq 1 1 5)
 do
-  for Repetition in $(seq 1 1 5)    # Shepherd numbers
+  for N_sheep in $(seq 50 50 200)   # Sheep numbers
   do
-    OUTPUT_FOLDER="$BASE_OUTPUT/N_sheep_$N_sheep/rep_$Repetition"
-    mkdir -p "$OUTPUT_FOLDER"
-    # Store the job as a string: "A REP OUTPUT_FOLDER"
-    JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
-    #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
+    for Repetition in $(seq 1 1 5)    # Shepherd numbers
+    do
+      OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
+      mkdir -p "$OUTPUT_FOLDER"
+      # Store the job as a string: "A REP OUTPUT_FOLDER"
+      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
+      #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
+    done
   done
 done
-
 i=0
 for JOB in "${JOBS[@]}"; do
     # Parse fields: $A $REP $OUTPUT_FOLDER
