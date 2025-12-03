@@ -1,6 +1,6 @@
 #!/bin/bash
 BASE_OUTPUT="results"
-mkdir -p "BASE_OUTPUT"
+mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
 Iterations=100
@@ -9,9 +9,9 @@ N_shepherd=1
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for N_sheep in $(seq 100 100 200)   # Sheep numbers
+for N_sheep in $(seq 50 50 200)   # Sheep numbers
 do
-  for Repetition in $(seq 1 1 2)    # Shepherd numbers
+  for Repetition in $(seq 1 1 5)    # Shepherd numbers
   do
     OUTPUT_FOLDER="$BASE_OUTPUT/N_sheep_$N_sheep/rep_$Repetition"
     mkdir -p "$OUTPUT_FOLDER"
@@ -36,12 +36,13 @@ for JOB in "${JOBS[@]}"; do
 
     echo "Launching job N_sheep=$N_sheep rep=$Repetition"
 
-#    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
-    # Redirect both stdout and stderr to a file
-    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
-
+##    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
+#    export OUTPUT_DIR="$OUTPUT_FOLDER"
+#    nohup python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
+#    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
+    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
     i=$((i+1))
 done
 
-wait
+#wait
 echo "Number of total runs: $i"
