@@ -5,7 +5,6 @@ mkdir -p "$BASE_OUTPUT"
 JOBS=()
 Iterations=10
 L3=50
-N_shepherd=1
 # -----------------------------
 # Generate JOBS
 # -----------------------------
@@ -13,7 +12,7 @@ for N_shepherd in $(seq 1 1 5)
 do
   for N_sheep in $(seq 50 50 200)   # Sheep numbers
   do
-    for Repetition in $(seq 1 1 5)    # Shepherd numbers
+    for Repetition in $(seq 1 1 2)    # Shepherd numbers
     do
       OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
       mkdir -p "$OUTPUT_FOLDER"
@@ -48,3 +47,6 @@ done
 
 #wait
 echo "Number of total runs: $i"
+
+LSA lib conf.c:4029:(snd_config_hooks_call) Cannot open shared library libasound_module_conf_pulse.so (/home/zheng/anaconda3/lib/alsa-lib/libasound_module_conf_pulse.so: cannot open shared object file: No such file or directory)
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
