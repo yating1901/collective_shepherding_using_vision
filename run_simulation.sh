@@ -3,7 +3,7 @@ BASE_OUTPUT="results"
 mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
-Iterations=10
+Iterations=100000
 L3=50
 # -----------------------------
 # Generate JOBS
