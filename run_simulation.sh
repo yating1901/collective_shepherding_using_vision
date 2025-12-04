@@ -36,11 +36,8 @@ for JOB in "${JOBS[@]}"; do
     mkdir -p "$OUTPUT_FOLDER"
 
     echo "Launching job N_sheep=$N_sheep rep=$Repetition"
-
-##    OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition &
-#    export OUTPUT_DIR="$OUTPUT_FOLDER"
-#    nohup python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
-#    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 &
+    # In your .sh file, before running python
+    export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:/usr/lib:$LD_LIBRARY_PATH"
     nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_2.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
     i=$((i+1))
 done
@@ -48,5 +45,3 @@ done
 #wait
 echo "Number of total runs: $i"
 
-LSA lib conf.c:4029:(snd_config_hooks_call) Cannot open shared library libasound_module_conf_pulse.so (/home/zheng/anaconda3/lib/alsa-lib/libasound_module_conf_pulse.so: cannot open shared object file: No such file or directory)
-ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
