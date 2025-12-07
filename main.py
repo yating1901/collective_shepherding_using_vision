@@ -9,10 +9,10 @@ Boundary_y = Target_place_y + Target_size
 
 
 TICK = 1
-Iterations = 10000
+Iterations = 100
 
-N_sheep = 20
-N_shepherd = 2
+N_sheep = 50
+N_shepherd = 1
 L3 = 400   # minimum repulsion distance with other shepherds;
 Fps = 25
 Uncomfortable_distance = 500
@@ -20,6 +20,7 @@ Is_Explicit = False
 Robot_Loop = False
 Show_Animation = False
 Save_data = False
+Is_Visualized = False
 
 from loop_function import Loop_Function
 
@@ -33,7 +34,7 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               target_size = Target_size,
                               framerate=Fps,
                               window_pad=30,
-                              with_visualization = False,
+                              with_visualization = Is_Visualized,
                               show_animation = Show_Animation,
                               agent_radius= 10,  # 10 Agent radius in pixels
                               L3 = L3,  # repulsion distance

@@ -72,7 +72,9 @@ class Loop_Function:
         self.add_sheep_agents()
         self.add_shepherd_agent()
 
-        #self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
+        # if self.with_visualization:
+        # self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
+
         self.clock = pygame.time.Clock()
 
     def draw_background(self):
@@ -377,8 +379,8 @@ class Loop_Function:
         if self.show_zones:
             self.draw_agent_zones()
 
-        #self.draw_framerate()
-        # self.draw_agent_stats()
+        self.draw_framerate()
+        self.draw_agent_stats()
 
         if self.show_animation:
             self.draw_background()
