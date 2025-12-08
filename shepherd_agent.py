@@ -425,7 +425,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         :param sheep_agents:
         """
         self.reflect_from_walls(self.boundary)
-        self.reflect_from_fence()
+        #self.reflect_from_fence()
 
         self.update_shepherd_forces(shepherd_agents)
 

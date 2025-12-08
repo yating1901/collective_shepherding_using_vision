@@ -8,11 +8,11 @@ L3=50
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for N_shepherd in $(seq 1 1 5)
+for N_shepherd in $(seq 1 1 5) # Shepherd numbers
 do
   for N_sheep in $(seq 50 50 200)   # Sheep numbers
   do
-    for Repetition in $(seq 0 1 10)    # Shepherd numbers
+    for Repetition in $(seq 1 1 10)
     do
       OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
       mkdir -p "$OUTPUT_FOLDER"

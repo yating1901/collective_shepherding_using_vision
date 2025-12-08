@@ -80,7 +80,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
         self.v0 = 0
-        self.v_max = 100 #200
+        self.v_max = 50 #100 #200
         self.vt = self.v0  # when tick = 0, vt = v0;
         self.v_upper = 2
         self.target_x = target_x
@@ -260,7 +260,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.x >= (self.target_x-self.target_size) and self.y >= (self.target_y-self.target_size):
             self.state = "staying"
             self.color = support.LIGHT_BLUE
-            #self.v_max = 100
+            self.v_max = 100
         else:
             self.state = "moving"
             self.color = support.GREEN
@@ -473,7 +473,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.orientation = self.orientation + np.pi
             self.vt = -self.vt
 
-        self.reflect_from_fence()
+        # self.reflect_from_fence()
         self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
 
         self.x += self.vt * np.cos(self.orientation)* self.tick_time
