@@ -11,7 +11,7 @@ Iterations=100000
 # -----------------------------
 for L3 in $(seq 100 50 200)
 do
-  for N_shepherd in $(seq 1 1 10) # Shepherd numbers
+  for N_shepherd in $(seq 1 1 5) # Shepherd numbers
   do
     for N_sheep in $(seq 50 50 200)   # Sheep numbers
     do
