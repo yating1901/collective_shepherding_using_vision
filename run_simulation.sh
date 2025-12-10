@@ -17,7 +17,7 @@ do
     do
       for Repetition in $(seq 1 1 10)
       do
-        OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
+        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
         # Store the job as a string: "A REP OUTPUT_FOLDER"
         JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
