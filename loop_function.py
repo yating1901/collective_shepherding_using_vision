@@ -15,7 +15,9 @@ class Loop_Function:
                  target_place_x = 1000, target_place_y = 1000, target_size = 200,
                  framerate=25, window_pad=30, with_visualization=True, show_animation = False,
                  agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False,
-                 uncomfortable_distance = 200, is_explicit = True, is_saving_data = False):
+                 uncomfortable_distance = 200, is_explicit = True, is_saving_data = False,
+                 angle_threshold_collection=np.pi/2,
+                 angle_threshold_drive=np.pi/6,):
         """
         Initializing the main simulation instance
         :param N: number of agents
@@ -54,6 +56,8 @@ class Loop_Function:
         self.show_zones = False
         self.physical_collision_avoidance = physical_obstacle_avoidance
         self.is_saving_data = is_saving_data
+        self.angle_threshold_collection = angle_threshold_collection
+        self.angle_threshold_drive = angle_threshold_drive
         #self.last_pause_tick = 0
 
         # Agent parameters
@@ -283,6 +287,8 @@ class Loop_Function:
                 L3=self.L3,
                 uncomfortable_distance= self.uncomfortable_distance,
                 is_explicit = self.is_explicit,
+                angle_threshold_collection = self.angle_threshold_collection,
+                angle_threshold_drive = self.angle_threshold_drive,
             )
             self.shepherd_agents.add(shepherd_agent)
             self.agents.add(shepherd_agent)

@@ -23,7 +23,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
     and to make decisions.
     """
 
-    def __init__(self, id, radius, position, orientation, env_size, color, window_pad, target_x, target_y, target_size, L3, uncomfortable_distance, is_explicit):
+    def __init__(self, id, radius, position, orientation, env_size, color, window_pad,
+                 target_x, target_y, target_size, L3, uncomfortable_distance, is_explicit,
+                 angle_threshold_collection, angle_threshold_drive):
         """
         Initalization method of main agent class of the simulations
 
@@ -91,8 +93,8 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.drive_agent_id = 0
         self.collect_agent_id = 0
         self.approach_agent_id = 0
-        self.Angle_Threshold_Collection = np.pi / 2  #np.pi / 3  # HALF FOV threshold for collect mode;
-        self.Angle_Threshold_Drive = np.pi/6  #np.pi/8
+        self.Angle_Threshold_Collection = angle_threshold_collection #np.pi / 2  #np.pi / 3  # HALF FOV threshold for collect mode;
+        self.Angle_Threshold_Drive = angle_threshold_drive #np.pi/6  #np.pi/8
         self.fov = np.pi * 2/3      # Relative FOV threshold for sensing other shepherd;
         self.max_turning_angle = np.pi /2
         self.uncomfortable_distance = uncomfortable_distance
