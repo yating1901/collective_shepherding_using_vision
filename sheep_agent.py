@@ -260,7 +260,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.x >= (self.target_x-self.target_size) and self.y >= (self.target_y-self.target_size):
             self.state = "staying"
             self.color = support.LIGHT_BLUE
-            self.v_max = 100
+            self.v_max = 20 #100
         else:
             self.state = "moving"
             self.color = support.GREEN
