@@ -9,23 +9,22 @@ Iterations=100000
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for L3 in $(seq 100 50 200)
+L3=100
+for N_shepherd in $(seq 1 1 5) # Shepherd numbers
 do
-  for N_shepherd in $(seq 1 1 5) # Shepherd numbers
+  for N_sheep in $(seq 50 50 200)   # Sheep numbers
   do
-    for N_sheep in $(seq 50 50 200)   # Sheep numbers
+    for Repetition in $(seq 1 1 10)
     do
-      for Repetition in $(seq 1 1 10)
-      do
-        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
-        mkdir -p "$OUTPUT_FOLDER"
-        # Store the job as a string: "A REP OUTPUT_FOLDER"
-        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
-        #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
-      done
+      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
+      mkdir -p "$OUTPUT_FOLDER"
+      # Store the job as a string: "A REP OUTPUT_FOLDER"
+      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
+      #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
     done
   done
 done
+
 
 i=0
 for JOB in "${JOBS[@]}"; do
