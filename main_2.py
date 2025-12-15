@@ -1,6 +1,7 @@
 import argparse
 from loop_function import Loop_Function
 import os, glob, json
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("n_sheep", type=int)
@@ -36,7 +37,9 @@ loop_function = Loop_Function(
     physical_obstacle_avoidance=False,
     uncomfortable_distance=500,
     is_explicit=False,
-    is_saving_data=True
+    is_saving_data=True,
+    angle_threshold_collection=np.pi/2,
+    angle_threshold_drive=np.pi/6
 )
 
 loop_function.start()

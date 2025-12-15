@@ -17,7 +17,7 @@ class Loop_Function:
                  agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False,
                  uncomfortable_distance = 200, is_explicit = True, is_saving_data = False,
                  angle_threshold_collection=np.pi/2,
-                 angle_threshold_drive=np.pi/6,):
+                 angle_threshold_drive=np.pi/6):
         """
         Initializing the main simulation instance
         :param N: number of agents
