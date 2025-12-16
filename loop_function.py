@@ -468,8 +468,8 @@ class Loop_Function:
                            "heading_direction": float("{:.2f}".format(shepherd_agent.orientation)),
                            "approach_sheep_id": int(shepherd_agent.approach_agent_id),
                            "MODE": float("{:.2f}".format(shepherd_agent.state)),
-                           "Coll_threshold": float("{:.4f}".format(shepherd_agent.angle_threshold_collection)),
-                           "Drive_threshold": float("{:.4f}".format(shepherd_agent.angle_threshold_drive)),
+                           "Coll_threshold": float("{:.4f}".format(shepherd_agent.Angle_Threshold_Collection)),
+                           "Drive_threshold": float("{:.4f}".format(shepherd_agent.Angle_Threshold_Drive)),
                            }
             shepherd_agents_data.append(agent_data)
         # try to save at different folder path
