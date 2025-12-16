@@ -3,24 +3,28 @@ BASE_OUTPUT="results"
 mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
-Iterations=100000
+Iterations=50000
 #Angle_Threshold_Collection=np.pi/2  # HALF FOV threshold for collect mode;
 #Angle_Threshold_Drive=np.pi/6  #np.pi/8
 # -----------------------------
 # Generate JOBS
 # -----------------------------
 L3=100
-for N_shepherd in $(seq 1 1 5) # Shepherd numbers
+
+for L3 in $(seq 50 50 200)
 do
-  for N_sheep in $(seq 50 50 200)   # Sheep numbers
+  for N_shepherd in $(seq 2 1 5) # Shepherd numbers
   do
-    for Repetition in $(seq 1 1 5)
+    for N_sheep in $(seq 50 50 200)   # Sheep numbers
     do
-      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
-      mkdir -p "$OUTPUT_FOLDER"
-      # Store the job as a string: "A REP OUTPUT_FOLDER"
-      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
-      #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
+      for Repetition in $(seq 1 1 1)
+      do
+        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
+        mkdir -p "$OUTPUT_FOLDER"
+        # Store the job as a string: "A REP OUTPUT_FOLDER"
+        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
+        #JOBS+=("python "main_2.py" $N_sheep $N_shepherd $Iterations $L3 $Repetition")
+      done
     done
   done
 done
