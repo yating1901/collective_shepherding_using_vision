@@ -3,16 +3,16 @@ BASE_OUTPUT="results"
 mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
-Iterations=100000
+Iterations=50000
 
 # Angle thresholds setup
 # Angle_Threshold_Collection: from pi*2/3 to 1/4*pi (10 steps)
-# Angle_Threshold_Drive: from 0 to pi/2 (10 steps)
-COLLECTION_START=$(echo "scale=10; 2*3.141592653589793/3" | bc)
-COLLECTION_END=$(echo "scale=10; 3.141592653589793/4" | bc)
-DRIVE_START=0
-DRIVE_END=$(echo "scale=10; 3.141592653589793/2" | bc)
-STEPS=10
+# Angle_Threshold_Drive: from pi/10 to pi/2 (10 steps)
+COLLECTION_START=$(echo "scale=5; 2*3.141592653589793/3" | bc)
+COLLECTION_END=$(echo "scale=5; 3.141592653589793/4" | bc)
+DRIVE_START=$(echo "scale=5; 3.141592653589793/20" | bc)
+DRIVE_END=$(echo "scale=5; 3.141592653589793/2" | bc)
+STEPS=5
 
 # Generate linear steps
 coll_steps=()
@@ -40,26 +40,23 @@ done
 ##################
 L3=100
 N_shepherd=1
-for N_sheep in $(seq 50 50 200)   # Sheep numbers
+N_sheep=50
+
+for coll_angle in "${coll_steps[@]}"
 do
-  for coll_angle in "${coll_steps[@]}"
+  for drive_angle in "${drive_steps[@]}"
   do
-    for drive_angle in "${drive_steps[@]}"
+    for Repetition in $(seq 1 1 1)
     do
-      for Repetition in $(seq 1 1 5)
-      do
-        # Create unique output folder with angle parameters
-        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$(printf "%.4f" $coll_angle)/drive_$(printf "%.4f" $drive_angle)/rep_$Repetition"
-        mkdir -p "$OUTPUT_FOLDER"
-        # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
-        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
-      done
+      # Create unique output folder with angle parameters
+      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$(printf "%.4f" $coll_angle)/drive_$(printf "%.4f" $drive_angle)/rep_$Repetition"
+      mkdir -p "$OUTPUT_FOLDER"
+      # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
+      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
     done
   done
 done
 #########################
-#  done
-#done
 
 echo "Total jobs to run: ${#JOBS[@]}"
 

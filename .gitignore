@@ -1,3 +1,5 @@
 results/
 venv/
+data_analysis/
 process_results/
+snapshots/

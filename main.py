@@ -1,4 +1,5 @@
 import os,glob
+import numpy as np
 
 Target_place_x = 800
 Target_place_y = 800
@@ -9,18 +10,20 @@ Boundary_y = Target_place_y + Target_size
 
 
 TICK = 1
-Iterations = 100
+Iterations = 10000
 
 N_sheep = 50
 N_shepherd = 1
-L3 = 400   # minimum repulsion distance with other shepherds;
-Fps = 25
+L3 = 100   # minimum repulsion distance with other shepherds;
+Fps = 50
 Uncomfortable_distance = 500
 Is_Explicit = False
 Robot_Loop = False
 Show_Animation = False
 Save_data = False
 Is_Visualized = False
+Coll_threshold = np.pi / 2
+Drive_threshold = np.pi / 6
 
 from loop_function import Loop_Function
 
@@ -42,7 +45,9 @@ loop_function = Loop_Function(N_sheep=N_sheep,  # Number of agents in the enviro
                               physical_obstacle_avoidance=False,
                               uncomfortable_distance = Uncomfortable_distance,
                               is_explicit = Is_Explicit,
-                              is_saving_data = Save_data)
+                              is_saving_data = Save_data,
+                              angle_threshold_collection = Coll_threshold,
+                              angle_threshold_drive = Drive_threshold)
 
 # we loop through all the agents of the created simulation
 # print("Setting parameters for agent", end = ' ')

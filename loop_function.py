@@ -76,8 +76,8 @@ class Loop_Function:
         self.add_sheep_agents()
         self.add_shepherd_agent()
 
-        # if self.with_visualization:
-        # self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
+        if self.with_visualization:
+            self.screen = pygame.display.set_mode([self.WIDTH + 2 * self.window_pad, self.HEIGHT + 2 * self.window_pad])
 
         self.clock = pygame.time.Clock()
 
@@ -468,6 +468,8 @@ class Loop_Function:
                            "heading_direction": float("{:.2f}".format(shepherd_agent.orientation)),
                            "approach_sheep_id": int(shepherd_agent.approach_agent_id),
                            "MODE": float("{:.2f}".format(shepherd_agent.state)),
+                           "Coll_threshold": float("{:.4f}".format(shepherd_agent.angle_threshold_collection)),
+                           "Drive_threshold": float("{:.4f}".format(shepherd_agent.angle_threshold_drive)),
                            }
             shepherd_agents_data.append(agent_data)
         # try to save at different folder path
