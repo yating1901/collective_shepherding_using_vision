@@ -8,11 +8,11 @@ Iterations=50000
 # Angle thresholds setup
 # Angle_Threshold_Collection: from pi*2/3 to 1/4*pi (10 steps)
 # Angle_Threshold_Drive: from pi/10 to pi/2 (10 steps)
-COLLECTION_START=$(echo "scale=5; 2*3.141592653589793/3" | bc)
-COLLECTION_END=$(echo "scale=5; 3.141592653589793/4" | bc)
-DRIVE_START=$(echo "scale=5; 3.141592653589793/20" | bc)
-DRIVE_END=$(echo "scale=5; 3.141592653589793/2" | bc)
-STEPS=5
+COLLECTION_START=$(echo "scale=10; 2*3.141592653589793/3" | bc)
+COLLECTION_END=$(echo "scale=10; 3.141592653589793/4" | bc)
+DRIVE_START=$(echo "scale=10; 3.141592653589793/20" | bc)
+DRIVE_END=$(echo "scale=10; 3.141592653589793/2" | bc)
+STEPS=10
 
 # Generate linear steps
 coll_steps=()
