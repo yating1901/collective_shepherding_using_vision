@@ -40,7 +40,7 @@ done
 ##################
 L3=100
 N_shepherd=1
-N_sheep=50
+N_sheep=100
 
 for coll_angle in "${coll_steps[@]}"
 do
