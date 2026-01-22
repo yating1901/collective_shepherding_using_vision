@@ -35,23 +35,22 @@ done
 # -----------------------------
 L3=100
 N_shepherd=1
-for N_sheep in $(seq 50 50 200)
+N_sheep=100
+for coll_angle in "${coll_steps[@]}"
 do
-  for coll_angle in "${coll_steps[@]}"
+  for drive_angle in "${drive_steps[@]}"
   do
-    for drive_angle in "${drive_steps[@]}"
+    for Repetition in $(seq 1 1 1)
     do
-      for Repetition in $(seq 1 1 5)
-      do
-        # Create unique output folder with angle parameters
-        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
-        mkdir -p "$OUTPUT_FOLDER"
-        # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
-        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
-      done
+      # Create unique output folder with angle parameters
+      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
+      mkdir -p "$OUTPUT_FOLDER"
+      # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
+      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
     done
   done
 done
+
 #########################
 
 echo "Total jobs to run: ${#JOBS[@]}"
