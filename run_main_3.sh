@@ -1,9 +1,9 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/DATA/results"
+BASE_OUTPUT="/mnt/DATA/yating/results"
 mkdir -p "$BASE_OUTPUT"
 
 JOBS=()
-Iterations=500
+Iterations=100000
 
 # Angle thresholds setup
 # Angle_Threshold_Collection: from pi*2/3 to 1/4*pi (10 steps)
@@ -33,26 +33,22 @@ done
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-#for L3 in $(seq 100 50 200)
-#do
-#  for N_shepherd in $(seq 1 1 5) # Shepherd numbers
-#  do
-##################
 L3=100
 N_shepherd=1
-N_sheep=100
-
-for coll_angle in "${coll_steps[@]}"
+for N_sheep in $(seq 50 50 200)
 do
-  for drive_angle in "${drive_steps[@]}"
+  for coll_angle in "${coll_steps[@]}"
   do
-    for Repetition in $(seq 1 1 1)
+    for drive_angle in "${drive_steps[@]}"
     do
-      # Create unique output folder with angle parameters
-      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
-      mkdir -p "$OUTPUT_FOLDER"
-      # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
-      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
+      for Repetition in $(seq 1 1 5)
+      do
+        # Create unique output folder with angle parameters
+        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
+        mkdir -p "$OUTPUT_FOLDER"
+        # Store job parameters: N_sheep N_shepherd Iterations L3 coll_angle drive_angle Repetition OUTPUT_FOLDER
+        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $coll_angle $drive_angle $Repetition $OUTPUT_FOLDER")
+      done
     done
   done
 done
