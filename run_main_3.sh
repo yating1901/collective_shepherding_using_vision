@@ -35,7 +35,7 @@ done
 # -----------------------------
 L3=100
 N_shepherd=1
-N_sheep=100
+N_sheep=150
 for coll_angle in "${coll_steps[@]}"
 do
   for drive_angle in "${drive_steps[@]}"
