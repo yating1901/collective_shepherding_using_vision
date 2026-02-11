@@ -4,7 +4,7 @@ mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
-Iterations=5
+Iterations=50000
 
 alphas=(0.523 0.628 0.785 1.047) #1/6pi 1/5pi 1/4pi 1/3pi
 
@@ -12,11 +12,11 @@ for alpha in "${alphas[@]}"
 do
   Alpha=$(printf "%.3f" "$alpha")
   echo "Alpha = $Alpha"
-  for N_shepherd in $(seq 1 1 1) # Shepherd numbers
+  for N_shepherd in $(seq 1 1 2) # Shepherd numbers
   do
-    for N_sheep in $(seq 40 20 400)   # Sheep numbers
+    for N_sheep in $(seq 20 20 100)   # Sheep numbers
     do
-      for Repetition in $(seq 1 1 1)
+      for Repetition in $(seq 1 1 2)
       do
         OUTPUT_FOLDER="$BASE_OUTPUT/Alpha_$Alpha/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
