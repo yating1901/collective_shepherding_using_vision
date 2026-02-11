@@ -1,6 +1,7 @@
 #!/bin/bash
 BASE_OUTPUT="results" #"/mnt/DATA/yating/results/antagonistic"
 mkdir -p "$BASE_OUTPUT"
+export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=5
