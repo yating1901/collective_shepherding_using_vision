@@ -16,7 +16,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
     and to make decisions.
     """
 
-    def __init__(self, id, radius, position, orientation, env_size, color, window_pad, target_x, target_y, target_size):
+    def __init__(self, id, radius, position, orientation, env_size, color, window_pad, target_x, target_y, target_size, is_antagonistic, alpha):
         """
         Initalization method of main agent class of the simulations
 
@@ -80,7 +80,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
         self.v0 = 0
-        self.v_max = 100 #100 #200
+        self.v_max = 150 #100 #200
         self.vt = self.v0  # when tick = 0, vt = v0;
         self.v_upper = 2
         self.target_x = target_x
@@ -98,8 +98,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.safe_distance = 300 #300  # 180 # 150 #130 #65   #200
         # parameter for force
         self.K_repulsion = 2800 #2800  #1200 #1600    #60 2
-        self.K_attraction = 5000 #2200 #2000 #1600 #2000  #2200   #20 0.8  #5.0
-        self.K_shepherd = 6000 #3500 #4500    #12  1.5
+        self.K_attraction = 2200 #2200 #5000 #2200 #2000 #1600 #2000  #2200   #20 0.8  #5.0
+        self.K_shepherd = 3500 #6000 #3500 #4500    #12  1.5
         self.K_Dr = 0.01  # 0.1 noise_strength
         self.tick_time = 0.01  #0.1
         self.max_turning_angle = np.pi * 2 / 3 #np.pi * 1 / 4
@@ -117,8 +117,10 @@ class Sheep_Agent(pygame.sprite.Sprite):
         # self.delta_angle = 0
 
         #####shepherd relative parameters#########
+        self.alpha = alpha #np.pi / 2
         self.f_shepherd_force_x = 0.0
         self.f_shepherd_force_y = 0.0
+        self.is_antagonistic = is_antagonistic
 
     def move_with_mouse(self, mouse, left_state, right_state):
         """Moving the agent with the mouse cursor, and rotating"""
@@ -236,6 +238,39 @@ class Sheep_Agent(pygame.sprite.Sprite):
         if self.num_att !=0:
             self.f_att_x = r_x / self.num_att
             self.f_att_y = r_y / self.num_att
+
+    def update_shepherd_forces_antagonistic(self, shepherd_agents):
+        r_x = 0
+        r_y = 0
+        num_shepherd = 0
+
+        self.f_shepherd_force_x = 0.0
+        self.f_shepherd_force_y = 0.0
+        for shepherd in shepherd_agents:
+            distance = np.sqrt((self.x - shepherd.x) ** 2 + (self.y - shepherd.y) ** 2)
+            if distance <= self.safe_distance:
+                num_shepherd = num_shepherd + 1
+                r_x = r_x + ((self.x - shepherd.x) / (distance + 0.000001))
+                r_y = r_y + ((self.y - shepherd.y) / (distance + 0.000001))
+        if num_shepherd != 0:
+            f_avoid_x = r_x / num_shepherd
+            f_avoid_y = r_y / num_shepherd
+            f_r = np.sqrt(r_x ** 2 + r_y ** 2)
+            f_avoid_angle = np.arctan2(f_avoid_y, f_avoid_x)
+            if f_avoid_angle < 0:
+                f_avoid_angle += 2 * np.pi  #[0, 2pi]
+
+            self.orientation = support.reflect_angle(self.orientation)  # [0, 2pi]
+
+            if f_avoid_angle > self.orientation: # not sure about self.orientation
+                f_avoid_angle = f_avoid_angle - self.alpha
+            else:
+                f_avoid_angle = f_avoid_angle + self.alpha
+
+            self.f_shepherd_force_x = f_r * np.cos(f_avoid_angle)
+            self.f_shepherd_force_y = f_r * np.sin(f_avoid_angle)
+
+        return
 
     def update_shepherd_forces(self, shepherd_agents):
         r_x = 0
@@ -421,24 +456,15 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         self.Limit_field_of_view(agents)
 
-        self.update_shepherd_forces(shepherd_agents)
+        # self.update_shepherd_forces(shepherd_agents)
+        if self.is_antagonistic:
+            self.update_shepherd_forces_antagonistic(shepherd_agents)
+        else:
+            self.update_shepherd_forces(shepherd_agents)
 
         self.Get_repulsion_force(agents)
 
         self.Get_attraction_force(agents)
-
-        # if self.network_type == "voronoi":
-        #     self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-        #     self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
-        # else:
-        #     if self.num_rep != 0:
-        #         self.f_x = self.f_avoid_x * self.K_repulsion
-        #         self.f_y = self.f_avoid_y * self.K_repulsion
-        #     else:
-        #         self.f_x = self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-        #         self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
-        # self.f_x = self.f_avoid_x * self.K_repulsion + self.f_att_x * self.K_attraction + self.f_shepherd_force_x * self.K_shepherd
-        # self.f_y = self.f_avoid_y * self.K_repulsion + self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
         if self.num_rep != 0:
             self.f_x = self.f_avoid_x * self.K_repulsion
@@ -466,7 +492,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.vt = -self.v_max
 
         # self.orientation += (self.w_dot/self.v0 + Dr) * self.tick_time  # 1/self.vt inertia ??
-        self.orientation += (self.w_dot * self.beta / self.vt + Dr) * self.tick_time#(self.w_dot / (self.vt + 0.0001) + Dr) * self.tick_time
+        self.orientation += (self.w_dot * self.beta / (self.vt+ 0.0001) + Dr) * self.tick_time
         self.orientation = support.transform_angle(self.orientation)    # [-pi, pi]
 
         if self.vt < 0:

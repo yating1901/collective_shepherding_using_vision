@@ -15,7 +15,9 @@ class Loop_Function:
                  target_place_x = 1000, target_place_y = 1000, target_size = 200,
                  framerate=25, window_pad=30, with_visualization=True, show_animation = False,
                  agent_radius=10, L3 = 20, robot_loop = False, physical_obstacle_avoidance=False,
-                 uncomfortable_distance = 200, is_explicit = True, is_saving_data = False,
+                 uncomfortable_distance = 200, is_explicit = False, is_saving_data = False,
+                 is_antagonistic = False,
+                 alpha = np.pi/6,
                  angle_threshold_collection=np.pi/2,
                  angle_threshold_drive=np.pi/6):
         """
@@ -56,6 +58,8 @@ class Loop_Function:
         self.show_zones = False
         self.physical_collision_avoidance = physical_obstacle_avoidance
         self.is_saving_data = is_saving_data
+        self.is_antagonistic = is_antagonistic
+        self.alpha = alpha
         self.angle_threshold_collection = angle_threshold_collection
         self.angle_threshold_drive = angle_threshold_drive
         #self.last_pause_tick = 0
@@ -158,7 +162,7 @@ class Loop_Function:
         line_height = int(self.window_pad / 2)
         font = pygame.font.Font(None, line_height)
         status = [
-            f"FPS: {self.framerate}, tick = {self.tick}/{self.Time}",
+            f"FPS: {self.framerate}, tick = {self.tick}/{self.Time}, Is_Antagonistic = {self.is_antagonistic}, alpha = {self.alpha:.2f}",
         ]
         if self.is_paused:
             status.append("Last starting tick: " + str(self.last_pause_tick)+" Last duration: " + str(self.current_simulation_time) +" s")
@@ -177,7 +181,7 @@ class Loop_Function:
                         # f"ID: {agent.id[7:]}",
                         # f"X: {agent.x:.2f}",
                         # f"Y: {agent.y:.2f}",
-                        # f"ori.: {180*(agent.orientation/np.pi):.2f}",
+                        #  f"ori.: {180*(agent.orientation/np.pi):.2f}",
                         # f"nei: {agent.interact_network}",
                         # f"vt:{agent.vt:.1f}",
                     ]
@@ -248,8 +252,8 @@ class Loop_Function:
 
     def add_sheep_agents(self):
         for i in range(self.n_sheep):
-            x = np.random.uniform(100, 350)
-            y = np.random.uniform(100, 350)
+            x = np.random.uniform(200, 500)
+            y = np.random.uniform(200, 500)
             orient = np.random.uniform(-np.pi, np.pi) #(0, 2*np.pi)
             # print(x, y, orient)
             sheep_agent = Sheep_Agent(
@@ -262,7 +266,9 @@ class Loop_Function:
                 window_pad=self.window_pad,
                 target_x = self.Target_x,
                 target_y = self.Target_y,
-                target_size = self.Target_size
+                target_size = self.Target_size,
+                is_antagonistic = self.is_antagonistic,
+                alpha = self.alpha
             )
             self.sheep_agents.add(sheep_agent)
 
@@ -271,7 +277,7 @@ class Loop_Function:
     def add_shepherd_agent(self):
         for i in range(self.n_shepherd):
             x = np.random.uniform(0, 200) #(0, 150)
-            y = np.random.uniform(300, 400)
+            y = np.random.uniform(0, 200) #(300, 400)
             orient = np.random.uniform(-np.pi, np.pi)
             shepherd_agent = Shepherd_Agent(
                 id="shepherd: " + str(i),
