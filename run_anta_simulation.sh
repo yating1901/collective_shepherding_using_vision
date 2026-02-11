@@ -16,7 +16,7 @@ do
   do
     for N_sheep in $(seq 20 20 100)   # Sheep numbers
     do
-      for Repetition in $(seq 1 1 2)
+      for Repetition in $(seq 3 1 5)
       do
         OUTPUT_FOLDER="$BASE_OUTPUT/Alpha_$Alpha/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
