@@ -5,13 +5,13 @@ mkdir -p "$BASE_OUTPUT"
 JOBS=()
 Iterations=50000
 
-alphas=(0.0 0.523 0.628 0.785 1.047) #1/6pi 1/5pi 1/4pi 1/3pi
+alphas=(0.523 0.628 0.785 1.047) #1/6pi 1/5pi 1/4pi 1/3pi
 
 for alpha in "${alphas[@]}"
 do
   Alpha=$(printf "%.3f" "$alpha")
-  echo "Alpha = $Alpha"
-  for N_shepherd in $(seq 1 1 2) # Shepherd numbers
+  #echo "Alpha = $Alpha"
+  for N_shepherd in $(seq 1 1 1) # Shepherd numbers
   do
     for N_sheep in $(seq 40 20 100)   # Sheep numbers
     do
