@@ -36,20 +36,19 @@ combinations = [
 
 data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
 
-
-
-
-for N_shepherd in range(1, 2):
+for N_shepherd in range(1, 3):
 
     alphas = [0.523, 0.628, 0.785, 1.047]
-    plt.figure(figsize=(12, 8))
-    marker_style = combinations[N_shepherd - 1]
 
+    plt.figure(figsize=(12, 8))
     # Calculate statistics
     x_values = []
     y_means = []
     y_stds = []
+
+    index = 0
     for alpha in alphas:
+        marker_style = combinations[index]
         for N_sheep in [20, 40, 60, 80, 100]:
             ticks = []
             for rep in range(1, 5):
@@ -77,6 +76,7 @@ for N_shepherd in range(1, 2):
                      markeredgewidth=0.5,
                      label=f'{alpha} Alpha',
                      alpha=0.8)
+        index = index +1
 
     plt.xlabel('Number of Sheep', fontsize=14)
     plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
@@ -87,3 +87,4 @@ for N_shepherd in range(1, 2):
     plt.tight_layout()
     plt.savefig('Time_and_N_sheep_NH_'+ str(N_shepherd)+'.png', dpi=300, bbox_inches='tight')
     # plt.show()
+    plt.clf()
