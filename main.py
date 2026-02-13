@@ -13,7 +13,7 @@ TICK = 1
 Iterations = 10000
 
 N_sheep = 100
-N_shepherd = 1
+N_shepherd = 2
 L3 = 100   # minimum repulsion distance with other shepherds;
 Fps = 50
 Uncomfortable_distance = 500
@@ -23,8 +23,8 @@ Save_data = False
 Show_Animation = False
 Is_Visualized = True #False
 Is_Antagonistic = True
-Alpha = np.pi/6 #5 4 3
-Coll_threshold = np.pi #/ 2
+Alpha = np.pi/3 #5 4 3
+Coll_threshold = np.pi / 2
 Drive_threshold = np.pi / 6
 
 from loop_function import Loop_Function

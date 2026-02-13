@@ -112,7 +112,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.network_type = "voronoi" #"voronoi" # "metric"
         self.interact_network = []
         self.fov = np.pi *  4/3
-        self.alpha = 1 #0.1 # heading accelerator
+        self.acceleration = 1 #0.1 # heading accelerator
         self.beta = 1 #0.8  # tuning accelerator
         # self.delta_angle = 0
 
@@ -484,7 +484,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         Dr = np.random.normal(0, 1) * np.sqrt(2 * self.K_Dr) / (self.tick_time ** 0.5)
 
-        self.vt = self.v_dot * self.alpha * self.tick_time + self.vt
+        self.vt = self.v_dot * self.acceleration * self.tick_time + self.vt
 
         if self.vt >= self.v_max:
             self.vt = self.v_max
