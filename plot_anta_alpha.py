@@ -47,6 +47,8 @@ for N_shepherd in range(1,3):
     marker_style = combinations[marker_index]
     for alpha in range(0, 10, 100):
         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
+        print("Alpha = ", Alpha)
+        if alpha == 0: Alpha = 0.000
         ticks = [] # list of finish time in different repetitions
         for rep in range(1, 6):
             file_path = f"{data_folder_path}Alpha_{Alpha}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
