@@ -45,13 +45,19 @@ for N_shepherd in range(1,3):
     y_stds = []
 
     marker_style = combinations[marker_index]
-    for alpha in range(0, 10, 100):
+
+    alphas = [index for index in range(0, 100, 10)]
+
+    for alpha in alphas:
         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
-        print("Alpha = ", Alpha)
-        if alpha == 0: Alpha = 0.000
+        folder_name = str(Alpha)
+        if alpha == 0: folder_name = "0.000"
+        if alpha == 90: folder_name = "1.570"
+        # print("Alpha = ", Alpha)
         ticks = [] # list of finish time in different repetitions
         for rep in range(1, 6):
-            file_path = f"{data_folder_path}Alpha_{Alpha}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+            file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+            # print(file_path)
             if os.path.exists(file_path):
                 sheep_data = read_json_file(file_path)
                 if sheep_data:
