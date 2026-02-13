@@ -49,7 +49,7 @@ for JOB in "${JOBS[@]}"; do
     export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:/usr/lib:$LD_LIBRARY_PATH"
 
     # Pass angle parameters to the Python script
-    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_phase_diagram_degree.py $N_shepherd $N_sheep $Iterations $Repetition $coll_angle $drive_angle> "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
+    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_phase.py $N_shepherd $N_sheep $Iterations $Repetition $coll_angle $drive_angle> "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
 
     i=$((i+1))
 done
