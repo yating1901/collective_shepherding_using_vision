@@ -5,8 +5,9 @@ export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
-N_shepherd=1
-N_sheep=60
+N_shepherd=1 #2 3
+N_sheep=60 #80 100
+Repetition=2 #3 4 5
 
 coll_angles=()
 for index in $(seq 40 20 120); do
@@ -31,13 +32,13 @@ do
   do
     drive_angle=$(printf "%.3f" "$drive_angle")
     #echo "drive_angle = $drive_angle"
-    for Repetition in $(seq 1 1 1)
-    do
-      # Create unique output folder with angle parameters
-      OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
-      mkdir -p "$OUTPUT_FOLDER"
-      JOBS+=("$N_shepherd $N_sheep $Iterations $Repetition $coll_angle $drive_angle $OUTPUT_FOLDER")
-    done
+#    for Repetition in $(seq 1 1 1)
+#    do
+    # Create unique output folder with angle parameters
+    OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
+    mkdir -p "$OUTPUT_FOLDER"
+    JOBS+=("$N_shepherd $N_sheep $Iterations $Repetition $coll_angle $drive_angle $OUTPUT_FOLDER")
+#    done
   done
 done
 
