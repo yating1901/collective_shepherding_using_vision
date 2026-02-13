@@ -27,7 +27,6 @@ def read_json_file(file_path):
     return all_data
 
 N_sheep = 60
-marker_index = 0
 combinations = [
     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
     {'marker': 's', 'color': 'skyblue', 'markersize': 10},
@@ -37,13 +36,13 @@ combinations = [
 ]
 data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
 
-for N_shepherd in range(1,3):
-    plt.figure(figsize=(12, 8))
+plt.figure(figsize=(12, 8))
+marker_index = 0
+for N_shepherd in range(1, 3):
     # Calculate statistics
     x_values = []
     y_means = []
     y_stds = []
-
     marker_style = combinations[marker_index]
 
     alphas = [index for index in range(0, 100, 10)]
