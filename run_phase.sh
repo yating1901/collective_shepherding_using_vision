@@ -16,7 +16,7 @@ for coll_angle in $(seq 40 20 120)
 do
   for drive_angle in $(seq 0 10 90)
   do
-    for Repetition in $(seq 2 1 3)
+    for Repetition in $(seq 3 1 5)
     do
     # Create unique output folder with angle parameters
     OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
