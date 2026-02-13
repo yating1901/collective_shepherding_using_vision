@@ -8,8 +8,8 @@ parser.add_argument("n_shepherd", type=int)
 parser.add_argument("n_sheep", type=int)
 parser.add_argument("iterations", type=int)
 parser.add_argument("repetition", type=int)
-parser.add_argument("coll_angle", type=float)  # degree
-parser.add_argument("drive_angle", type=float)  # degree
+parser.add_argument("coll_angle", type=int)  # degree
+parser.add_argument("drive_angle", type=int)  # degree
 args = parser.parse_args()
 
 Target_place_x = 800
@@ -57,7 +57,7 @@ loop_function = Loop_Function(N_sheep=args.n_sheep,
                               is_saving_data = Save_data,
                               is_antagonistic = Is_Antagonistic,
                               alpha = Alpha,
-                              angle_threshold_collection = args.coll_angle,
-                              angle_threshold_drive = args.drive_angle)
+                              angle_threshold_collection = round(args.coll_angle/180*np.pi, 3),
+                              angle_threshold_drive = round(args.drive_angle/180*np.pi, 3))
 
 loop_function.start()

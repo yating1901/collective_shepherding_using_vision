@@ -68,7 +68,7 @@ for N_shepherd in range(1, 3):
             y_stds.append(np.std(ticks))
 
     # Use plt.errorbar which is designed for this
-    plt.errorbar(x_values, y_means,
+    plt.errorbar(x_values, y_means, yerr=y_stds,
                  fmt=marker_style['marker'] + '-',  # Marker with line
                  color=marker_style['color'],
                  markersize=10,
