@@ -38,7 +38,7 @@ data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
 
 plt.figure(figsize=(12, 8))
 marker_index = 0
-for N_shepherd in range(1, 3):
+for N_shepherd in range(1, 4):
     # Calculate statistics
     x_values = []
     y_means = []
