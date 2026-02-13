@@ -26,6 +26,8 @@ def read_json_file(file_path):
 
     return all_data
 
+N_sheep = 60
+marker_index = 0
 combinations = [
     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
     {'marker': 's', 'color': 'skyblue', 'markersize': 10},
@@ -33,33 +35,28 @@ combinations = [
     {'marker': 'D', 'color': 'gold', 'markersize': 10},
     {'marker': '*', 'color': 'grey', 'markersize': 10},
 ]
-
 data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
 
-N_sheep = 60
-index = 0
 for N_shepherd in range(1,3):
-
     plt.figure(figsize=(12, 8))
     # Calculate statistics
     x_values = []
     y_means = []
     y_stds = []
 
-    marker_style = combinations[index]
+    marker_style = combinations[marker_index]
     for alpha in range(0, 10, 100):
-        ticks = []
-        alpha = round(alpha*3.14/180, 3)
-
+        Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
+        ticks = [] # list of finish time in different repetitions
         for rep in range(1, 6):
-            file_path = f"{data_folder_path}Alpha_{alpha}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+            file_path = f"{data_folder_path}Alpha_{Alpha}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
             if os.path.exists(file_path):
                 sheep_data = read_json_file(file_path)
                 if sheep_data:
                     ticks.append(sheep_data[-1]["tick"])
 
         if ticks:
-            x_values.append(alpha)
+            x_values.append(alpha) #or Alpha shown in radius degree
             y_means.append(np.mean(ticks))
             y_stds.append(np.std(ticks))
 
@@ -74,17 +71,18 @@ for N_shepherd in range(1,3):
                  linewidth=2,
                  markeredgecolor='grey',
                  markeredgewidth=0.5,
-                 label=f'{N_shepherd} N_shepherd',
+                 label=f'{N_shepherd =} N_shepherd',
                  alpha=0.8)
-    index = index +1
 
-    plt.xlabel('Alpha', fontsize=14)
-    plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-    plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
-    plt.xticks([index for index in range(0,10,100)])
-    plt.grid(True, alpha=0.3)
-    plt.legend(title='N(shepherd)', fontsize=14)
-    plt.tight_layout()
-    plt.savefig('Time_and_Alpha_NH_'+ str(N_shepherd)+'.png', dpi=300, bbox_inches='tight')
-    # plt.show()
-    plt.clf()
+    marker_index = marker_index +1
+
+plt.xlabel('Alpha', fontsize=14)
+plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
+plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
+plt.xticks([index for index in range(0, 10, 100)])
+plt.grid(True, alpha=0.3)
+plt.legend(title='N(shepherd)', fontsize=14)
+plt.tight_layout()
+plt.savefig('Time_and_Alpha_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
+# plt.show()
+plt.clf()
