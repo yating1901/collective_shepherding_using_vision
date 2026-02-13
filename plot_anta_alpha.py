@@ -79,18 +79,18 @@ for N_shepherd in range(1,3):
                  linewidth=2,
                  markeredgecolor='grey',
                  markeredgewidth=0.5,
-                 label=f'{N_shepherd =} N_shepherd',
+                 label=f"N_shepherd = {N_shepherd}",
                  alpha=0.8)
-
+    plt.legend()
     marker_index = marker_index +1
 
 plt.xlabel('Alpha', fontsize=14)
 plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
 plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
-plt.xticks([index for index in range(0, 10, 100)])
+plt.xticks(alphas)
 plt.grid(True, alpha=0.3)
-plt.legend(title='N(shepherd)', fontsize=14)
-plt.tight_layout()
+plt.legend(loc='best', ncol=2, fontsize=8)
+
 plt.savefig('Time_and_Alpha_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
 # plt.show()
 plt.clf()
