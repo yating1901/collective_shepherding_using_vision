@@ -4,7 +4,7 @@ mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
-Iterations=5
+Iterations=50000
 
 #alphas=(0.523 0.628 0.785 1.047) #1/6pi 1/5pi 1/4pi 1/3pi
 alphas=()
