@@ -16,9 +16,9 @@ for alpha in "${alphas[@]}"
 do
   Alpha=$(printf "%.3f" "$alpha")
   echo "Alpha = $Alpha"
-  for N_shepherd in $(seq 3 1 3) # Shepherd numbers
+  for N_shepherd in $(seq 1 1 3)
   do
-    for N_sheep in $(seq 60 20 60)   # Sheep numbers
+    for N_sheep in $(seq 100 20 100)
     do
       for Repetition in $(seq 1 1 5)
       do

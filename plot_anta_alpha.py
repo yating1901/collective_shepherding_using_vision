@@ -80,7 +80,7 @@ for N_shepherd in range(1, 3):
                  markeredgewidth=0.5,
                  label=f"N_shepherd = {N_shepherd}",
                  alpha=0.8)
-    plt.legend()
+    # plt.legend()
     marker_index = marker_index +1
 
 plt.xlabel('Alpha', fontsize=14)

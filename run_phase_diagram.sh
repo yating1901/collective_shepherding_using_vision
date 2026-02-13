@@ -7,7 +7,7 @@ JOBS=()
 Iterations=50000
 N_shepherd=1 #2 3
 N_sheep=60 #80 100
-Repetition=3 #4 5
+Repetition=4 #5
 
 coll_angles=()
 for index in $(seq 40 20 120); do
