@@ -9,7 +9,7 @@ N_shepherd=1
 N_sheep=60
 
 coll_angles=()
-for index in $(seq 40 20 40); do
+for index in $(seq 40 20 120); do
   coll_angle=$(echo "scale=3; $index *3.14/180" | bc)
   coll_angles+=($coll_angle)
 done
@@ -26,11 +26,11 @@ done
 for coll_angle in "${coll_angles[@]}"
 do
   coll_angle=$(printf "%.3f" "$coll_angle")
-  echo "coll_angle = $coll_angle"
+  #echo "coll_angle = $coll_angle"
   for drive_angle in "${drive_angles[@]}"
   do
-    echo "drive_angle = $drive_angle"
     drive_angle=$(printf "%.3f" "$drive_angle")
+    #echo "drive_angle = $drive_angle"
     for Repetition in $(seq 1 1 1)
     do
       # Create unique output folder with angle parameters
