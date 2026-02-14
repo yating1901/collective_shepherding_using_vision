@@ -26,7 +26,7 @@ def read_json_file(file_path):
 
     return all_data
 
-N_sheep = 60
+N_sheep = 100
 combinations = [
     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
     {'marker': 's', 'color': 'skyblue', 'markersize': 10},
