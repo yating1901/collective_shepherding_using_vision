@@ -252,8 +252,8 @@ class Loop_Function:
 
     def add_sheep_agents(self):
         for i in range(self.n_sheep):
-            x = np.random.uniform(200, 500)
-            y = np.random.uniform(200, 500)
+            x = np.random.uniform(200, 500)#(100,400)
+            y = np.random.uniform(200, 500)#(100,400)
             orient = np.random.uniform(-np.pi, np.pi) #(0, 2*np.pi)
             # print(x, y, orient)
             sheep_agent = Sheep_Agent(
