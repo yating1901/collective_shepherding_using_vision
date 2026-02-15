@@ -28,7 +28,8 @@ def read_json_file(file_path):
 
 
 
-N_sheep = 100
+N_sheep = 60 #100
+N_shepherd = 5
 combinations = [
     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
     {'marker': 's', 'color': 'skyblue', 'markersize': 10},
@@ -40,7 +41,7 @@ data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
 
 plt.figure(figsize=(12, 8))
 marker_index = 0
-for N_shepherd in range(1, 6):
+for n_shepherd in range(1, N_shepherd+1):
     # Calculate statistics
     x_values = []
     y_means = []
@@ -57,7 +58,7 @@ for N_shepherd in range(1, 6):
         # print("Alpha = ", Alpha)
         ticks = [] # list of finish time in different repetitions
         for rep in range(1, 6):
-            file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+            file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{n_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
             # print(file_path)
             if os.path.exists(file_path):
                 sheep_data = read_json_file(file_path)
@@ -80,7 +81,7 @@ for N_shepherd in range(1, 6):
                  linewidth=2,
                  markeredgecolor='grey',
                  markeredgewidth=0.5,
-                 label=f"N_shepherd = {N_shepherd}",
+                 label=f"N_shepherd = {n_shepherd}",
                  alpha=0.8)
     # plt.legend()
     marker_index = marker_index +1
@@ -92,6 +93,6 @@ plt.xticks(alphas)
 plt.grid(True, alpha=0.3)
 plt.legend(loc='best', ncol=2, fontsize=8)
 
-plt.savefig('Time_and_Alpha_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
+plt.savefig('Time_and_Alpha_'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
 # plt.show()
 plt.clf()

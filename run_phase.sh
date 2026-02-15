@@ -12,7 +12,7 @@ N_sheep=80 #100
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for coll_angle in $(seq 40 20 120)
+for coll_angle in $(seq 40 20 120) #$(seq 30 20 110)
 do
   for drive_angle in $(seq 0 10 90)
   do
