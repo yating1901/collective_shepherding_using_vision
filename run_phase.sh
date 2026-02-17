@@ -1,22 +1,22 @@
 #!/bin/bash
-BASE_OUTPUT=/media/samsung-2TB/results_phase_diagram  #"results" #"/mnt/DATA/yating/results_phase_diagram"
+BASE_OUTPUT="/mnt/DATA/yating/results/phase_diagram" #/media/samsung-2TB/results_phase_diagram  #"results" #"/mnt/DATA/yating/results_phase_diagram"
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
 N_shepherd=1 #2 3
-N_sheep=100 #100
+N_sheep=100 # 60 80  #120
 #Repetition=5
 
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for coll_angle in $(seq 40 20 120) #$(seq 30 20 110)
+for coll_angle in $(seq 30 20 110)
 do
   for drive_angle in $(seq 0 10 90)
   do
-    for Repetition in $(seq 4 1 5)
+    for Repetition in $(seq 1 1 5)
     do
     # Create unique output folder with angle parameters
     OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
