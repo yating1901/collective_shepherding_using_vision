@@ -73,7 +73,7 @@ data = parse_mixed_file(json_file_name + '.json')
 # print(f"Number of sheep: {data['n_sheep']}")
 map_data = data['matrix']
 map_data = map_data[::-1]
-print(map_data)
+# print(map_data)
 
 # Create DataFrame
 df = pd.DataFrame(map_data)
