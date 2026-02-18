@@ -22,7 +22,7 @@ Is_Visualized = False
 Robot_Loop = False
 Save_data = True
 
-Is_Explicit = False
+Is_Explicit = True
 Is_Antagonistic = True
 Is_Obstacle = True
 Alpha = np.pi/6 #5 4 3
