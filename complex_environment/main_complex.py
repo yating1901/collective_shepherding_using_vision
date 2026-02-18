@@ -18,7 +18,7 @@ L3 = 100   # minimum repulsion distance with other shepherds;
 Fps = 50
 Uncomfortable_distance = 500
 Show_Animation = False
-Is_Visualized = True #False
+Is_Visualized = False
 Robot_Loop = False
 Save_data = True
 
