@@ -1,5 +1,5 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/DATA/yating/results/obstacles/implicit"
+BASE_OUTPUT="/mnt/DATA/yating/results/obstacles/explicit"
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
