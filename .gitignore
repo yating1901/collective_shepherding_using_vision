@@ -3,6 +3,7 @@ venv/
 data_analysis/
 process_results/
 snapshots/
-videos
+videos/
+obstacle_videos/
 sheep_agent_data.json
 shepherd_agent_data.json
