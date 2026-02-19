@@ -9,11 +9,11 @@ Is_explcit=True
 
 for L3 in $(seq 0 100 101)
 do
-  for N_shepherd in $(seq 1 1 2)
+  for N_shepherd in $(seq 1 1 3)
   do
     for N_sheep in $(seq 50 50 200)
     do
-      for Repetition in $(seq 1 1 5)
+      for Repetition in $(seq 1 1 10)
       do
         OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
@@ -41,7 +41,7 @@ for JOB in "${JOBS[@]}"; do
     echo "Launching job N_sheep=$N_sheep rep=$Repetition Iterations=$Iterations L3=$L3 Repetition=$Repetition"
     # In your .sh file, before running python
     export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:/usr/lib:$LD_LIBRARY_PATH"
-    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_complex.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
+    nohup env OUTPUT_DIR="$OUTPUT_FOLDER" python main_complex_parameters.py $N_sheep $N_shepherd $Iterations $L3 $Repetition > "$OUTPUT_FOLDER/output.txt" 2>&1 < /dev/null &
     i=$((i+1))
 done
 
