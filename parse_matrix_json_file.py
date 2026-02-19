@@ -65,8 +65,8 @@ def parse_mixed_file(filename):
 
 # Usage
 
-N_sheep = 100
-json_file_name = "map_data_Nh_1_Ns_100_rep_5"
+N_sheep = 150
+json_file_name = "map_data_Nh_1_Ns_150_rep_3"
 data = parse_mixed_file(json_file_name + '.json')
 
 # print(f"Matrix size: {len(data['matrix'])}x{len(data['matrix'][0])}")
