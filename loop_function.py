@@ -402,7 +402,7 @@ class Loop_Function:
 
         # self.add_projection()
 
-        self.save_arena_image()
+        # self.save_arena_image()
 
     def add_projection(self):
         folder_path = os.getcwd() + "/projections/"

@@ -19,9 +19,9 @@ Fps = 50
 Uncomfortable_distance = 500
 Show_Animation = False
 Robot_Loop = False
-Save_data = True
+Save_data = False
 
-Is_Explicit = False #True
+Is_Explicit = True
 Is_Visualized = True #False
 Is_Antagonistic = True
 Alpha = np.pi/6 #5 4 3
