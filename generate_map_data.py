@@ -180,3 +180,8 @@ print(data_folder_path)
 # data_folder_path = "/mnt/Data/yating/results_phase_diagram/"+"N_shepherd_"+str(N_shepherd)+"/N_sheep_"+str(N_sheep)+"/"
 # print(data_folder_path)
 generate_map_json_data(N_shepherd, N_sheep, rep, coll_angles, drive_angles, coll_folders, drive_folders, data_folder_path)
+#
+
+
+
+# scp -r yating@130.149.244.146:/media/samsung-2TB/results_phase_diagram/*  ./home/yating/Workspace/collective_shepherding_using_vision
