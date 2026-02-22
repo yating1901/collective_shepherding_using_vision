@@ -1,9 +1,10 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-#from data_analysis.read_json_file import read_json_file
+import json
 
-Data_folder_path = "/home/yateng/Workspace/CAB/data_analysis/Data_obstacles/"
+
+
 
 def read_json_file(file_path):
     print(f"Reading: {file_path}")
@@ -36,7 +37,13 @@ combinations = [
     {'marker': '*', 'color': 'grey', 'markersize': 5},
 ]
 
-for N_shepherd in [1, 3]:
+
+
+Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
+
+
+
+for N_shepherd in [1, 2, 3]:
     plt.figure(figsize=(12, 8))
     marker_index = 0
     for Is_explicit in [True, False]:
