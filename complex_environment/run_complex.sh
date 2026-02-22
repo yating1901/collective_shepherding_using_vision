@@ -5,9 +5,9 @@ export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
-Is_explcit=False
+Is_explcit=True
 
-for L3 in $(seq 50 50 101)
+for L3 in $(seq 50 100 101)
 do
   for N_shepherd in $(seq 2 1 3)
   do
