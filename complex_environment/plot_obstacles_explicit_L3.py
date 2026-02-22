@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from data_analysis.read_json_file import read_json_file
+#from data_analysis.read_json_file import read_json_file
 
 Data_folder_path = "/home/yateng/Workspace/CAB/data_analysis/Data_obstacles/"
 
