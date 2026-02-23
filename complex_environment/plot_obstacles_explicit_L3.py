@@ -47,7 +47,7 @@ for N_shepherd in [1, 2, 3]:
     plt.figure(figsize=(12, 8))
     marker_index = 0
     for Is_explicit in [True, False]:
-        for L3 in [0, 100]:
+        for L3 in [0, 50, 100]:
             if Is_explicit:
                 data_folder_path = Data_folder_path + "explicit/"+"L3_" + str(L3)+"/"
             else:
