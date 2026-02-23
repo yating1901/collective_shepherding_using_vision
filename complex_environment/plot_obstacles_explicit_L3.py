@@ -41,6 +41,17 @@ combinations = [
 
 Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
 
+def save_data(data, file_name, data_path):
+    json_file = file_name + ".json"
+    json_file_path = os.path.join(data_path, json_file)
+
+    print(json_file_path)
+
+    with open(json_file_path, "a") as outfile:
+        json.dump(data, outfile)
+        outfile.write("\n")
+
+    return
 
 
 for N_shepherd in [1, 2, 3]:
@@ -56,6 +67,7 @@ for N_shepherd in [1, 2, 3]:
             x_values = []
             y_means = []
             y_stds = []
+            final_ticks = []
             for N_sheep in range(50, 250, 50):
                 ticks = []
                 for rep in range(1, 6):
@@ -65,15 +77,19 @@ for N_shepherd in [1, 2, 3]:
                         sheep_data = read_json_file(file_path)
                         if sheep_data:
                             ticks.append(sheep_data[-1]["tick"])
-
+                final_ticks.append(ticks)
                 if ticks:
                     x_values.append(N_sheep)
                     y_means.append(np.mean(ticks))
                     y_stds.append(np.std(ticks))
             if Is_explicit:
                 line_label = "Explicit_L3_" + str(L3)
+                json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3)
+                save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
             else:
                 line_label = "Implicit_L3_" + str(L3)
+                json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)
+                save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
 
             marker_style = combinations[marker_index]
             marker_index += 1

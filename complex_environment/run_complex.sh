@@ -5,7 +5,7 @@ export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
-Is_explcit=True
+Is_explcit=False
 
 for L3 in $(seq 50 100 101)
 do
