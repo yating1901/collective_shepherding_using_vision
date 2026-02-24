@@ -30,10 +30,13 @@ def read_json_file(file_path):
     return all_data
 
 combinations = [
-    {'marker': 'o', 'color': 'lightcoral', 'markersize': 5},
-    {'marker': 's', 'color': 'skyblue', 'markersize': 5},
-    {'marker': '^', 'color': 'lightgreen', 'markersize': 5},
+    {'marker': 'o-', 'color': 'lightcoral', 'markersize': 5},
+    {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
+    {'marker': 's-', 'color': 'lightgreen', 'markersize': 5},
+    {'marker': 's', 'color': 'gold', 'markersize': 5},
+    {'marker': 'D-', 'color': 'grey', 'markersize': 5},
     {'marker': 'D', 'color': 'gold', 'markersize': 5},
+    {'marker': '*-', 'color': 'grey', 'markersize': 5},
     {'marker': '*', 'color': 'grey', 'markersize': 5},
 ]
 
@@ -55,7 +58,7 @@ def save_data(data, file_name, data_path):
 
 
 for N_shepherd in [1, 2, 3]:
-    plt.figure(figsize=(12, 8))
+    # plt.figure(figsize=(12, 8))
     marker_index = 0
     for Is_explicit in [True, False]:
         for L3 in [0, 50, 100]:
@@ -91,30 +94,30 @@ for N_shepherd in [1, 2, 3]:
                 json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)
                 save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
 
-            marker_style = combinations[marker_index]
-            marker_index += 1
+            # marker_style = combinations[marker_index]
+            # marker_index += 1
 
             # Use plt.errorbar which is designed for this
-            plt.errorbar(x_values, y_means, yerr=y_stds,
-                         fmt=marker_style['marker'] + '-',  # Marker with line
-                         color=marker_style['color'],
-                         markersize=10,
-                         capsize=5,
-                         capthick=2,
-                         elinewidth=2,
-                         linewidth=2,
-                         markeredgecolor='grey',
-                         markeredgewidth=0.5,
-                         label=line_label,
-                         alpha=0.8)
+            # plt.errorbar(x_values, y_means, yerr=y_stds,
+            #              fmt=marker_style['marker'] + '-',  # Marker with line
+            #              color=marker_style['color'],
+            #              markersize=10,
+            #              capsize=5,
+            #              capthick=2,
+            #              elinewidth=2,
+            #              linewidth=2,
+            #              markeredgecolor='grey',
+            #              markeredgewidth=0.5,
+            #              label=line_label,
+            #              alpha=0.8)
 
-    plt.xlabel('Number of Sheep', fontsize=14)
-    plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-    plt.title('Different Strategies in Complex environment', fontsize=16)
-    plt.xticks([50, 100, 150, 200])
-    plt.grid(True, alpha=0.3)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig('Obstacles_Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
-    # plt.show()
-    plt.clf()
+    # plt.xlabel('Number of Sheep', fontsize=14)
+    # plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
+    # plt.title('Different Strategies in Complex environment', fontsize=16)
+    # plt.xticks([50, 100, 150, 200])
+    # plt.grid(True, alpha=0.3)
+    # plt.legend()
+    # plt.tight_layout()
+    # plt.savefig('Obstacles_Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
+    # # plt.show()
+    # plt.clf()

@@ -4,7 +4,7 @@ mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
-Iterations=50000
+Iterations=100000
 Is_explcit=False
 Is_anta=False
 
