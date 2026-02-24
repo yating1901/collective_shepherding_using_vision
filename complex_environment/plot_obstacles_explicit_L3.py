@@ -29,26 +29,11 @@ def read_json_file(file_path):
 
     return all_data
 
-combinations = [
-    {'marker': 'o-', 'color': 'lightcoral', 'markersize': 5},
-    {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
-    {'marker': 's-', 'color': 'lightgreen', 'markersize': 5},
-    {'marker': 's', 'color': 'gold', 'markersize': 5},
-    {'marker': 'D-', 'color': 'grey', 'markersize': 5},
-    {'marker': 'D', 'color': 'gold', 'markersize': 5},
-    {'marker': '*-', 'color': 'grey', 'markersize': 5},
-    {'marker': '*', 'color': 'grey', 'markersize': 5},
-]
 
-
-
-Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
 
 def save_data(data, file_name, data_path):
     json_file = file_name + ".json"
     json_file_path = os.path.join(data_path, json_file)
-
-    print(json_file_path)
 
     with open(json_file_path, "a") as outfile:
         json.dump(data, outfile)
@@ -57,60 +42,77 @@ def save_data(data, file_name, data_path):
     return
 
 
-for N_shepherd in [1, 2, 3]:
-    # plt.figure(figsize=(12, 8))
-    marker_index = 0
-    for Is_explicit in [True, False]:
-        for L3 in [0, 50, 100]:
-            if Is_explicit:
-                data_folder_path = Data_folder_path + "explicit/"+"L3_" + str(L3)+"/"
-            else:
-                data_folder_path = Data_folder_path + "implicit/"+"L3_" + str(L3)+"/"
+def transfer_data_to_json(Data_folder_path):
+    for N_shepherd in [3]:
+        for Is_explicit in [True, False]:
+            for L3 in [0, 50, 100]:
+                if Is_explicit:
+                    data_folder_path = Data_folder_path + "explicit/"+"L3_" + str(L3)+"/"
+                else:
+                    data_folder_path = Data_folder_path + "implicit/"+"L3_" + str(L3)+"/"
 
-            x_values = []
-            y_means = []
-            y_stds = []
-            final_ticks = []
-            for N_sheep in range(50, 250, 50):
-                ticks = []
-                for rep in range(1, 6):
-                    file_path = f"{data_folder_path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
-                    print(file_path)
-                    if os.path.exists(file_path):
-                        sheep_data = read_json_file(file_path)
-                        if sheep_data:
-                            ticks.append(sheep_data[-1]["tick"])
-                final_ticks.append(ticks)
-                if ticks:
-                    x_values.append(N_sheep)
-                    y_means.append(np.mean(ticks))
-                    y_stds.append(np.std(ticks))
-            if Is_explicit:
-                line_label = "Explicit_L3_" + str(L3)
-                json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3)
-                save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
-            else:
-                line_label = "Implicit_L3_" + str(L3)
-                json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)
-                save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
+                final_ticks = []
+                for N_sheep in range(50, 250, 50):
+                    ticks = []
+                    for rep in range(1, 6):
+                        file_path = f"{data_folder_path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+                        print(file_path)
+                        if os.path.exists(file_path):
+                            sheep_data = read_json_file(file_path)
+                            if sheep_data:
+                                ticks.append(sheep_data[-1]["tick"])
+                    final_ticks.append(ticks)
+                if Is_explicit:
+                    json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3)
+                    save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
+                else:
+                    json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)
+                    save_data(final_ticks, json_file_name, Data_folder_path)  # raw: Ns=50, 100, 150, 200
+    return
 
-            # marker_style = combinations[marker_index]
-            # marker_index += 1
 
-            # Use plt.errorbar which is designed for this
-            # plt.errorbar(x_values, y_means, yerr=y_stds,
-            #              fmt=marker_style['marker'] + '-',  # Marker with line
-            #              color=marker_style['color'],
-            #              markersize=10,
-            #              capsize=5,
-            #              capthick=2,
-            #              elinewidth=2,
-            #              linewidth=2,
-            #              markeredgecolor='grey',
-            #              markeredgewidth=0.5,
-            #              label=line_label,
-            #              alpha=0.8)
-
+def plot_data(data_folder_path):
+    combinations = [
+        {'marker': 'o-', 'color': 'lightcoral', 'markersize': 5},
+        {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
+        {'marker': 's-', 'color': 'lightgreen', 'markersize': 5},
+        {'marker': 's', 'color': 'gold', 'markersize': 5},
+        {'marker': 'D-', 'color': 'grey', 'markersize': 5},
+        {'marker': 'D', 'color': 'gold', 'markersize': 5},
+        {'marker': '*-', 'color': 'grey', 'markersize': 5},
+        {'marker': '*', 'color': 'grey', 'markersize': 5},
+    ]
+    plt.figure(figsize=(12, 8))
+    for N_shepherd in [2, 3]:
+        marker_index = 0
+        for Is_explicit in [True, False]:
+            for L3 in [0, 50, 100]:
+                if Is_explicit:
+                    line_label = "Explicit_L3_" + str(L3)
+                    json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3)+".json"
+                else:
+                    line_label = "Implicit_L3_" + str(L3)
+                    json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)+".json"
+                x_values = []
+                y_means = []
+                y_stds = []
+                data = read_json_file(f"{data_folder_path}/{json_file_name}")
+                print(data)
+                marker_style = combinations[marker_index]
+    #             plt.errorbar(x_values, y_means, yerr=y_stds,
+    #                          fmt=marker_style['marker'] + '-',  # Marker with line
+    #                          color=marker_style['color'],
+    #                          markersize=10,
+    #                          capsize=5,
+    #                          capthick=2,
+    #                          elinewidth=2,
+    #                          linewidth=2,
+    #                          markeredgecolor='grey',
+    #                          markeredgewidth=0.5,
+    #                          label=line_label,
+    #                          alpha=0.8)
+    #             marker_index += 1
+    #
     # plt.xlabel('Number of Sheep', fontsize=14)
     # plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
     # plt.title('Different Strategies in Complex environment', fontsize=16)
@@ -121,3 +123,15 @@ for N_shepherd in [1, 2, 3]:
     # plt.savefig('Obstacles_Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
     # # plt.show()
     # plt.clf()
+
+    return
+
+Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
+transfer_data_to_json(Data_folder_path)
+
+
+# data_folder_path = "/home/yateng/Workspace/CAB/data_analysis/Data_obstacles/"
+# plot_data(data_folder_path)
+
+
+#scp -r zheng@gadus.itb.biologie.hu-berlin.de:/mnt/DATA/yating/results/obstacles/explicit/*.json .
