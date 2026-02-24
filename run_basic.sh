@@ -8,7 +8,7 @@ Iterations=100000
 Is_explcit=False
 Is_anta=False
 
-for L3 in $(seq 0 50 51) #for L3 in $(seq 100 50 151)
+for L3 in $(seq 100 50 151)
 do
   for N_shepherd in $(seq 1 1 5)
   do
