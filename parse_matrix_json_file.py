@@ -65,7 +65,7 @@ def parse_mixed_file(filename):
 
 # Usage
 #N_shepherd=1
-N_sheep = 120
+N_sheep = 80
 json_file_name = "map_data_Nh_1_Ns_"+str(N_sheep)+"_rep_5"
 data = parse_mixed_file(json_file_name + '.json')
 
