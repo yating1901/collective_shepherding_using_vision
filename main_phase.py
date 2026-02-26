@@ -24,10 +24,12 @@ N_shepherd = 1
 L3 = 100   # minimum repulsion distance with other shepherds;
 Fps = 50
 Uncomfortable_distance = 500
-Is_Explicit = True
+Show_Animation = False
 Robot_Loop = False
 Save_data = True
-Show_Animation = False
+
+
+Is_Explicit = True
 Is_Visualized = False
 Is_Antagonistic = True
 Alpha = np.pi/6 #5 4 3

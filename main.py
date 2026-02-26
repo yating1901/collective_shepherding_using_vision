@@ -12,21 +12,21 @@ Boundary_y = Target_place_y + Target_size
 TICK = 1
 Iterations = 50000
 
-N_sheep = 60
+N_sheep = 150
 N_shepherd = 1
 L3 = 100   # minimum repulsion distance with other shepherds;
 Fps = 50
 Uncomfortable_distance = 500
 Show_Animation = False
 Robot_Loop = False
-Save_data = False
+Save_data = True #False
 
 Is_Explicit = True
 Is_Visualized = True #False
-Is_Antagonistic = True
-Alpha = np.pi/6 #5 4 3
-Coll_threshold = np.pi / 2
-Drive_threshold = np.pi / 6
+Is_Antagonistic = False #True
+Alpha = 0 #np.pi/6 #5 4 3
+Coll_threshold = (30/180)*np.pi # np.pi / 2 #
+Drive_threshold = 0 #np.pi / 6 #(60/180)*np.pi #
 
 from loop_function import Loop_Function
 
@@ -78,3 +78,4 @@ loop_function.start()
 
 # make video from pngs
 #ffmpeg -framerate 100 -i %d.png -c:v libx264 -r 30 -pix_fmt yuv420p output.mp4
+#nh_1_ns_100_coll_90_drive_30_Anta_0_final_tick=2542.mp4
