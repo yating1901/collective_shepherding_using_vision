@@ -12,7 +12,7 @@ for L3 in $(seq 0 50 51) #$(seq 100 50 151)
 do
   for N_shepherd in $(seq 1 1 5)
   do
-    for N_sheep in $(seq 50 50 200)
+    for N_sheep in $(seq 40 40 160)
     do
       for Repetition in $(seq 1 1 5)
       do

@@ -73,65 +73,97 @@ def transfer_data_to_json(Data_folder_path):
 
 def plot_data(data_folder_path):
     combinations = [
-        {'marker': 'o-', 'color': 'lightcoral', 'markersize': 5},
-        {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
-        {'marker': 's-', 'color': 'lightgreen', 'markersize': 5},
-        {'marker': 's', 'color': 'gold', 'markersize': 5},
-        {'marker': 'D-', 'color': 'grey', 'markersize': 5},
-        {'marker': 'D', 'color': 'gold', 'markersize': 5},
-        {'marker': '*-', 'color': 'grey', 'markersize': 5},
-        {'marker': '*', 'color': 'grey', 'markersize': 5},
+        {'marker': 'o', 'color': 'grey', "facecolor":"white", 'markersize': 12},
+        {'marker': 's', 'color': 'grey', "facecolor":"white", 'markersize': 12},
+        {'marker': '*', 'color': 'grey', "facecolor":"white", 'markersize': 12},  # nh = 2, explicit, L3=0,50,100
+        {'marker': 'o', 'color': 'grey', "facecolor":"grey", 'markersize': 12},
+        {'marker': 's', 'color': 'grey', "facecolor":"grey", 'markersize': 12},
+        {'marker': '*', 'color': 'grey', "facecolor":"grey", 'markersize': 12},  # nh = 2, implicit, L3=0,50,100
+        {'marker': 'o', 'color': 'darkred', "facecolor": "white", 'markersize': 12},
+        {'marker': 's', 'color': 'darkred', "facecolor": "white", 'markersize': 12},
+        {'marker': '*', 'color': 'darkred', "facecolor": "white", 'markersize': 12},  # nh = 3, explicit, L3=0,50,100
+        {'marker': 'o', 'color': 'darkred', "facecolor":"darkred", 'markersize': 12},
+        {'marker': 's', 'color': 'darkred', "facecolor":"darkred",'markersize': 12},
+        {'marker': '*', 'color': 'darkred', "facecolor":"darkred",'markersize': 12},#nh = 3, implicit, L3=0,50,100
+
     ]
     plt.figure(figsize=(12, 8))
+    marker_index = 0
     for N_shepherd in [2, 3]:
-        marker_index = 0
-        for Is_explicit in [True, False]:
+        for Is_explicit in [False, True]:
             for L3 in [0, 50, 100]:
+                x_values = [50, 100, 150, 200]
+                y_means = []
+                y_medians = []
+                y_stds = []
                 if Is_explicit:
-                    line_label = "Explicit_L3_" + str(L3)
+                    line_label = "Nh_" + str(N_shepherd) + "_Ex_L3_" + str(L3)
                     json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3)+".json"
                 else:
-                    line_label = "Implicit_L3_" + str(L3)
+                    line_label = "Nh_" + str(N_shepherd) + "_Im_L3_" + str(L3)
                     json_file_name = "Nh" + str(N_shepherd) + "_Implicit_L3_" + str(L3)+".json"
-                x_values = []
-                y_means = []
-                y_stds = []
-                data = read_json_file(f"{data_folder_path}/{json_file_name}")
-                print(data)
+                # print(line_label)
+                file_path = f"{data_folder_path}/{json_file_name}"
+
+                with open(file_path, 'r') as file:
+                    sheep_data = json.load(file)
+                    # print(sheep_data)
+                data_array = np.array(sheep_data)
+                y_means = np.mean(data_array, axis=1)
+                y_medians = np.median(data_array, axis=1)
+
                 marker_style = combinations[marker_index]
-    #             plt.errorbar(x_values, y_means, yerr=y_stds,
-    #                          fmt=marker_style['marker'] + '-',  # Marker with line
-    #                          color=marker_style['color'],
-    #                          markersize=10,
-    #                          capsize=5,
-    #                          capthick=2,
-    #                          elinewidth=2,
-    #                          linewidth=2,
-    #                          markeredgecolor='grey',
-    #                          markeredgewidth=0.5,
-    #                          label=line_label,
-    #                          alpha=0.8)
-    #             marker_index += 1
-    #
-    # plt.xlabel('Number of Sheep', fontsize=14)
-    # plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-    # plt.title('Different Strategies in Complex environment', fontsize=16)
-    # plt.xticks([50, 100, 150, 200])
-    # plt.grid(True, alpha=0.3)
-    # plt.legend()
-    # plt.tight_layout()
-    # plt.savefig('Obstacles_Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
-    # # plt.show()
-    # plt.clf()
+                marker_index = marker_index + 1
+                plt.plot(x_values, y_means, label=line_label, marker=marker_style['marker'],  # Marker with line
+                         color=marker_style['color'], markersize=marker_style["markersize"], markerfacecolor=marker_style["facecolor"])
+                # plt.errorbar(x_values, y_means, yerr=y_stds,
+                #              fmt=marker_style['marker'] + '-',  # Marker with line
+                #              color=marker_style['color'],
+                #              markersize=10,
+                #              capsize=5,
+                #              capthick=2,
+                #              elinewidth=2,
+                #              linewidth=2,
+                #              markeredgecolor='grey',
+                #              markeredgewidth=0.5,
+                #              label=line_label,
+                #              alpha=0.8)
+
+    N_shepherd = 1
+    L3=100
+    x_values = [50, 100, 150, 200]
+    line_label = "Nh_" + str(N_shepherd) + "_L3_" + str(L3)
+    json_file_name = "Nh" + str(N_shepherd) + "_Explicit_L3_" + str(L3) + ".json"
+    file_path = f"{data_folder_path}/{json_file_name}"
+
+    with open(file_path, 'r') as file:
+        sheep_data = json.load(file)
+        # print(sheep_data)
+    data_array = np.array(sheep_data)
+    y_medians = np.median(data_array, axis=1)
+    plt.plot(x_values, y_means, label=line_label, marker="D",
+             color="yellow", markersize=10,
+             markerfacecolor="yellow")
+
+    plt.xlabel('Number of Sheep', fontsize=14)
+    plt.ylabel('Median Value of Final Ticks', fontsize=14)
+    plt.title('Number of Shepherd = 1', fontsize=16)
+    plt.xticks([50, 100, 150, 200])
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('Obstacles_Ex_implicit_Nsh_1_2_3'+ '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
+    # plt.show()
+    plt.clf()
 
     return
 
-Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
-transfer_data_to_json(Data_folder_path)
+# Data_folder_path = "/mnt/DATA/yating/results/obstacles/"
+# transfer_data_to_json(Data_folder_path)
 
 
-# data_folder_path = "/home/yateng/Workspace/CAB/data_analysis/Data_obstacles/"
-# plot_data(data_folder_path)
+data_folder_path = "/home/yateng/Workspace/CAB/data_analysis/Data_obstacles/"
+plot_data(data_folder_path)
 
 
 #scp -r zheng@gadus.itb.biologie.hu-berlin.de:/mnt/DATA/yating/results/obstacles/explicit/*.json .
