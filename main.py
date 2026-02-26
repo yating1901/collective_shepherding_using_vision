@@ -19,7 +19,7 @@ Fps = 50
 Uncomfortable_distance = 500
 Show_Animation = False
 Robot_Loop = False
-Save_data = True #False
+Save_data = False
 
 Is_Explicit = True
 Is_Visualized = True #False
