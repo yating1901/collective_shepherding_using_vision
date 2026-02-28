@@ -6,7 +6,7 @@ export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 JOBS=()
 Iterations=50000
 N_shepherd=1
-N_sheep=2 # 40 80 120 160
+N_sheep=80 # 40 80 120 160
 Is_Antagonistic=False
 
 # -----------------------------
