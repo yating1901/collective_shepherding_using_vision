@@ -29,10 +29,10 @@ Robot_Loop = False
 Save_data = True
 
 
-Is_Explicit = True
+Is_Explicit = False
 Is_Visualized = False
-Is_Antagonistic = True
-Alpha = np.pi/6 #5 4 3
+Is_Antagonistic = False #True
+Alpha = 0 #np.pi/6 #5 4 3
 Coll_threshold = np.pi / 2
 Drive_threshold = np.pi / 6
 

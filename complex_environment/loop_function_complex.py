@@ -66,8 +66,8 @@ class Loop_Function_Complex:
         #self.last_pause_tick = 0
         self.is_obstacle = is_obstacle
 
-        self.list_of_obstacles = [{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
-            #[{'x':400, 'y':600, 'radius':50}, {'x':600, 'y':400, 'radius':50}]  # (x,y,radius)
+        self.list_of_obstacles = [{'x':750, 'y':600, 'radius':50}, {'x':600, 'y':750, 'radius':50}]  # (x,y,radius)
+        #[{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
         # #[{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
         #,{'x':100, 'y':100, 'radius':50}]  # (x,y,radius)
         # Agent parameters
@@ -414,8 +414,7 @@ class Loop_Function_Complex:
 
         # self.add_projection()
 
-        if self.is_saving_data:
-            self.save_arena_image()
+        self.save_arena_image()
 
     def add_projection(self):
         folder_path = os.getcwd() + "/projections/"

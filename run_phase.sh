@@ -1,13 +1,13 @@
 #!/bin/bash
-BASE_OUTPUT=/media/samsung-2TB/results_phase_diagram  #"/mnt/DATA/yating/results_phase_diagram" #/media/samsung-2TB/results_phase_diagram  #"results" #
+BASE_OUTPUT="/mnt/DATA/yating/results_phase_diagram" #/media/samsung-2TB/results_phase_diagram  #"results" #
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
-N_shepherd=1 #2 3
-N_sheep=60 # 60 80  #120 #150 # 200
-#Repetition=5
+N_shepherd=1
+N_sheep=2 # 40 80 120 160
+Is_Antagonistic=False
 
 # -----------------------------
 # Generate JOBS
