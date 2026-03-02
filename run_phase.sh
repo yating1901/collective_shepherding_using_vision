@@ -12,7 +12,7 @@ Is_Antagonistic=False
 # -----------------------------
 # Generate JOBS
 # -----------------------------
-for coll_angle in $(seq 30 20 120)
+for coll_angle in $(seq 40 20 120) #$(seq 40 20 120)
 do
   for drive_angle in $(seq 0 10 90)
   do
