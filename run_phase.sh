@@ -6,7 +6,7 @@ export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 JOBS=()
 Iterations=50000
 N_shepherd=1
-N_sheep=120 # 40 80 120 160
+N_sheep=160 # 40 80 120 160
 Is_Antagonistic=False
 
 # -----------------------------
@@ -16,7 +16,7 @@ for coll_angle in $(seq 30 10 120)
 do
   for drive_angle in $(seq 0 10 90)
   do
-    for Repetition in $(seq 4 1 5)
+    for Repetition in $(seq 1 1 3)
     do
     # Create unique output folder with angle parameters
     OUTPUT_FOLDER="$BASE_OUTPUT/N_shepherd_$N_shepherd/N_sheep_$N_sheep/coll_$coll_angle/drive_$drive_angle/rep_$Repetition"
