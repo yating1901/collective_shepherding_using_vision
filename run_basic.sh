@@ -1,11 +1,11 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/data3/Yating_Data/results/basic/implicit"
+BASE_OUTPUT="/mnt/data3/Yating_Data/results/basic/explicit"
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=100000
-Is_explcit=False
+Is_explcit=True
 Is_anta=False
 
 for L3 in $(seq 100 50 151)
