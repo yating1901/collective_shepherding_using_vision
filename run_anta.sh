@@ -1,13 +1,14 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/DATA/yating/results/antagonistic"  #"results" #
+BASE_OUTPUT="/mnt/data3/Yating_Data/results/antagonistic/implicit"  #"results" #
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
+Is_Explicit=False
 
 alphas=()
-for index in $(seq 0 10 90); do
+for index in $(seq 0 10 40); do
   alpha=$(echo "scale=6; $index*3.14/180" | bc)
   alphas+=($alpha)
 done
@@ -16,11 +17,11 @@ for alpha in "${alphas[@]}"
 do
   Alpha=$(printf "%.3f" "$alpha")
   echo "Alpha = $Alpha"
-  for N_shepherd in $(seq 4 1 5)
+  for N_shepherd in $(seq 1 1 5)
   do
-    for N_sheep in $(seq 120 20 120)
+    for N_sheep in $(seq 100 20 101)
     do
-      for Repetition in $(seq 1 1 5)
+      for Repetition in $(seq 1 1 10)
       do
         OUTPUT_FOLDER="$BASE_OUTPUT/Alpha_$Alpha/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
