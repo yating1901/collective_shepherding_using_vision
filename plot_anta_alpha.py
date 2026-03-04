@@ -64,7 +64,7 @@ def transfer_data_to_json(Data_folder_path):
     return
 
 
-data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/explicit" #"/mnt/DATA/yating/results/antagonistic/"
+data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/explicit/" #"/mnt/DATA/yating/results/antagonistic/"
 transfer_data_to_json(data_folder_path)
 
 # N_sheep = 100
