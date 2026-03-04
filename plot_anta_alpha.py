@@ -27,74 +27,113 @@ def read_json_file(file_path):
     return all_data
 
 
+def save_data(data, file_name, data_path):
+    json_file = file_name + ".json"
+    json_file_path = os.path.join(data_path, json_file)
 
-N_sheep = 100
-N_shepherd = 5
-combinations = [
-    {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
-    {'marker': 's', 'color': 'skyblue', 'markersize': 10},
-    {'marker': '^', 'color': 'lightgreen', 'markersize': 10},
-    {'marker': 'D', 'color': 'gold', 'markersize': 10},
-    {'marker': '*', 'color': 'grey', 'markersize': 10},
-]
-data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/" #"/mnt/DATA/yating/results/antagonistic/"
+    with open(json_file_path, "a") as outfile:
+        json.dump(data, outfile)
+        outfile.write("\n")
 
-plt.figure(figsize=(12, 8))
-marker_index = 0
-for n_shepherd in range(1, N_shepherd+1):
-    # Calculate statistics
-    x_values = []
-    y_means = []
-    y_stds = []
-    y_medias = []
-    marker_style = combinations[marker_index]
+    return
 
+
+def transfer_data_to_json(Data_folder_path):
+    N_sheep = 100
     alphas = [index for index in range(0, 50, 10)]
-
     for alpha in alphas:
         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
         folder_name = str(Alpha)
         if alpha == 0: folder_name = "0.000"
         if alpha == 90: folder_name = "1.570"
-        # print("Alpha = ", Alpha)
-        ticks = [] # list of finish time in different repetitions
-        for rep in range(1, 11):
-            file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{n_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
-            # print(file_path)
-            if os.path.exists(file_path):
-                sheep_data = read_json_file(file_path)
-                if sheep_data:
-                    ticks.append(sheep_data[-1]["tick"])
+        for N_shepherd in [1, 2, 3, 4, 5]:
+            data_folder_path = Data_folder_path + "Alpha_" + folder_name + "/N_shepherd_" + str(N_shepherd) + "/N_sheep_" + str(N_sheep) + "/"
+            for rep in [index for index in range(1,11)]:
+                final_ticks = []
+                ticks = []
+                for rep in range(1, 6):
+                    file_path = f"{data_folder_path}rep_{rep}/sheep_data.json"
+                    print(file_path)
+                    if os.path.exists(file_path):
+                        sheep_data = read_json_file(file_path)
+                        if sheep_data:
+                            ticks.append(sheep_data[-1]["tick"])
+                final_ticks.append(ticks)
+                json_file_name = "Alpha_" + str(alpha) + "N_s_" + str(N_sheep) + "rep_" + str(rep) + ".json"
+                save_data(final_ticks, json_file_name, Data_folder_path)
+    return
 
-        if ticks:
-            x_values.append(alpha) #or Alpha shown in radius degree
-            y_means.append(np.mean(ticks))
-            y_stds.append(np.std(ticks))
-            y_medias.append(np.median(ticks))
 
-    # Use plt.errorbar which is designed for this
-    plt.errorbar(x_values, y_means, yerr=y_stds,
-                 fmt=marker_style['marker'] + '-',  # Marker with line
-                 color=marker_style['color'],
-                 markersize=10,
-                 capsize=5,
-                 capthick=2,
-                 elinewidth=2,
-                 linewidth=2,
-                 markeredgecolor='grey',
-                 markeredgewidth=0.5,
-                 label=f"N_shepherd = {n_shepherd}",
-                 alpha=0.8)
-    # plt.legend()
-    marker_index = marker_index +1
+data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/explicit" #"/mnt/DATA/yating/results/antagonistic/"
+transfer_data_to_json(data_folder_path)
 
-plt.xlabel('Alpha', fontsize=14)
-plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
-plt.xticks(alphas)
-plt.grid(True, alpha=0.3)
-plt.legend(loc='best', ncol=2, fontsize=8)
-
-plt.savefig('Time_and_Alpha_Ex_'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'_rep_10.png', dpi=300, bbox_inches='tight')
-# plt.show()
-plt.clf()
+# N_sheep = 100
+# N_shepherd = 5
+# combinations = [
+#     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
+#     {'marker': 's', 'color': 'skyblue', 'markersize': 10},
+#     {'marker': '^', 'color': 'lightgreen', 'markersize': 10},
+#     {'marker': 'D', 'color': 'gold', 'markersize': 10},
+#     {'marker': '*', 'color': 'grey', 'markersize': 10},
+# ]
+# data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/" #"/mnt/DATA/yating/results/antagonistic/"
+#
+# plt.figure(figsize=(12, 8))
+# marker_index = 0
+# for n_shepherd in range(1, N_shepherd+1):
+#     # Calculate statistics
+#     x_values = []
+#     y_means = []
+#     y_stds = []
+#     y_medias = []
+#     marker_style = combinations[marker_index]
+#
+#     alphas = [index for index in range(0, 50, 10)]
+#
+#     for alpha in alphas:
+#         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
+#         folder_name = str(Alpha)
+#         if alpha == 0: folder_name = "0.000"
+#         if alpha == 90: folder_name = "1.570"
+#         # print("Alpha = ", Alpha)
+#         ticks = [] # list of finish time in different repetitions
+#         for rep in range(1, 11):
+#             file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{n_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+#             # print(file_path)
+#             if os.path.exists(file_path):
+#                 sheep_data = read_json_file(file_path)
+#                 if sheep_data:
+#                     ticks.append(sheep_data[-1]["tick"])
+#
+#         if ticks:
+#             x_values.append(alpha) #or Alpha shown in radius degree
+#             y_means.append(np.mean(ticks))
+#             y_stds.append(np.std(ticks))
+#             y_medias.append(np.median(ticks))
+#
+#     # Use plt.errorbar which is designed for this
+#     plt.errorbar(x_values, y_means, yerr=y_stds,
+#                  fmt=marker_style['marker'] + '-',  # Marker with line
+#                  color=marker_style['color'],
+#                  markersize=10,
+#                  capsize=5,
+#                  capthick=2,
+#                  elinewidth=2,
+#                  linewidth=2,
+#                  markeredgecolor='grey',
+#                  markeredgewidth=0.5,
+#                  label=f"N_shepherd = {n_shepherd}",
+#                  alpha=0.8)
+#     # plt.legend()
+#     marker_index = marker_index +1
+#
+# plt.xlabel('Alpha', fontsize=14)
+# plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
+# plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
+# plt.xticks(alphas)
+# plt.grid(True, alpha=0.3)
+# plt.legend(loc='best', ncol=2, fontsize=8)
+#
+# plt.savefig('Time_and_Alpha_Ex_'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'_rep_10.png', dpi=300, bbox_inches='tight')
+# # plt.show()
+# plt.clf()

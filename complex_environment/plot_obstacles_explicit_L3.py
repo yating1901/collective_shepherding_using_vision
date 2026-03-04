@@ -135,7 +135,7 @@ def plot_data(data_folder_path):
 
     plt.xlabel('Number of Sheep', fontsize=14)
     plt.ylabel('Mean Value of Final Ticks', fontsize=14)
-    plt.title('Number of Shepherd = 1', fontsize=16)
+    #plt.title('Number of Shepherd = 1', fontsize=16)
     plt.xticks([50, 100, 150, 200])
     plt.grid(True, alpha=0.3)
     plt.legend()
