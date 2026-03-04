@@ -116,18 +116,6 @@ def plot_data(data_folder_path):
                 marker_index = marker_index + 1
                 plt.plot(x_values, y_means, label=line_label, marker=marker_style['marker'],  # Marker with line
                          color=marker_style['color'], markersize=marker_style["markersize"], markerfacecolor=marker_style["facecolor"])
-                # plt.errorbar(x_values, y_means, yerr=y_stds,
-                #              fmt=marker_style['marker'] + '-',  # Marker with line
-                #              color=marker_style['color'],
-                #              markersize=10,
-                #              capsize=5,
-                #              capthick=2,
-                #              elinewidth=2,
-                #              linewidth=2,
-                #              markeredgecolor='grey',
-                #              markeredgewidth=0.5,
-                #              label=line_label,
-                #              alpha=0.8)
 
     N_shepherd = 1
     L3=100
@@ -146,7 +134,7 @@ def plot_data(data_folder_path):
              markerfacecolor="yellow")
 
     plt.xlabel('Number of Sheep', fontsize=14)
-    plt.ylabel('Median Value of Final Ticks', fontsize=14)
+    plt.ylabel('Mean Value of Final Ticks', fontsize=14)
     plt.title('Number of Shepherd = 1', fontsize=16)
     plt.xticks([50, 100, 150, 200])
     plt.grid(True, alpha=0.3)

@@ -28,7 +28,7 @@ def read_json_file(file_path):
 
 
 
-N_sheep = 100 #60 #100
+N_sheep = 100
 N_shepherd = 5
 combinations = [
     {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
@@ -37,7 +37,7 @@ combinations = [
     {'marker': 'D', 'color': 'gold', 'markersize': 10},
     {'marker': '*', 'color': 'grey', 'markersize': 10},
 ]
-data_folder_path = "/mnt/DATA/yating/results/antagonistic/"
+data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/" #"/mnt/DATA/yating/results/antagonistic/"
 
 plt.figure(figsize=(12, 8))
 marker_index = 0
@@ -46,9 +46,10 @@ for n_shepherd in range(1, N_shepherd+1):
     x_values = []
     y_means = []
     y_stds = []
+    y_medias = []
     marker_style = combinations[marker_index]
 
-    alphas = [index for index in range(0, 100, 10)]
+    alphas = [index for index in range(0, 50, 10)]
 
     for alpha in alphas:
         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
@@ -69,6 +70,7 @@ for n_shepherd in range(1, N_shepherd+1):
             x_values.append(alpha) #or Alpha shown in radius degree
             y_means.append(np.mean(ticks))
             y_stds.append(np.std(ticks))
+            y_medias.append(np.median(ticks))
 
     # Use plt.errorbar which is designed for this
     plt.errorbar(x_values, y_means, yerr=y_stds,
@@ -93,6 +95,6 @@ plt.xticks(alphas)
 plt.grid(True, alpha=0.3)
 plt.legend(loc='best', ncol=2, fontsize=8)
 
-plt.savefig('Time_and_Alpha_'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
+plt.savefig('Time_and_Alpha_Ex'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
 # plt.show()
 plt.clf()
