@@ -46,12 +46,12 @@ def transfer_data_to_json(Data_folder_path):
         folder_name = str(Alpha)
         if alpha == 0: folder_name = "0.000"
         if alpha == 90: folder_name = "1.570"
-        for N_shepherd in [1, 2, 3, 4, 5]:
+        for N_shepherd in range(1, 6):
             data_folder_path = Data_folder_path + "Alpha_" + folder_name + "/N_shepherd_" + str(N_shepherd) + "/N_sheep_" + str(N_sheep) + "/"
             for rep in [index for index in range(1,11)]:
                 final_ticks = []
                 ticks = []
-                for rep in range(1, 6):
+                for rep in range(1, 11):
                     file_path = f"{data_folder_path}rep_{rep}/sheep_data.json"
                     print(file_path)
                     if os.path.exists(file_path):
