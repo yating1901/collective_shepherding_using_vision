@@ -58,7 +58,7 @@ for n_shepherd in range(1, N_shepherd+1):
         if alpha == 90: folder_name = "1.570"
         # print("Alpha = ", Alpha)
         ticks = [] # list of finish time in different repetitions
-        for rep in range(1, 6):
+        for rep in range(1, 11):
             file_path = f"{data_folder_path}Alpha_{folder_name}/N_shepherd_{n_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
             # print(file_path)
             if os.path.exists(file_path):
@@ -95,6 +95,6 @@ plt.xticks(alphas)
 plt.grid(True, alpha=0.3)
 plt.legend(loc='best', ncol=2, fontsize=8)
 
-plt.savefig('Time_and_Alpha_Ex'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'.png', dpi=300, bbox_inches='tight')
+plt.savefig('Time_and_Alpha_Ex_'+'Nh='+str(N_shepherd)+'_Ns='+ str(N_sheep)+'_rep_10.png', dpi=300, bbox_inches='tight')
 # plt.show()
 plt.clf()
