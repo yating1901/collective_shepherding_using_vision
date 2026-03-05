@@ -48,16 +48,14 @@ for L3 in [0, 50, 100, 150]:
         x_values = []
         y_means = []
         y_stds = []
-
         for N_sheep in [60, 80, 120, 160]:
             ticks = []
             for rep in range(1, 6):
-                file_path = f"{data_folder_path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
+                file_path = f"{data_folder_path}/L3_{L3}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
                 if os.path.exists(file_path):
                     sheep_data = read_json_file(file_path)
                     if sheep_data:
                         ticks.append(sheep_data[-1]["tick"])
-
             if ticks:
                 x_values.append(N_sheep)
                 y_means.append(np.mean(ticks))
