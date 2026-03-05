@@ -166,7 +166,7 @@ def generate_map_json_data(N_shepherd, N_sheep, rep, coll_angles, drive_angles, 
 
 
 N_shepherd = 1
-N_sheep = 80 #60 80 100 120
+N_sheep = 80 #120 160
 rep = 5
 coll_angles=[angle for angle in range(30,121,10)]
 drive_angles=[angle for angle in range(0,91,10)]
@@ -174,7 +174,7 @@ coll_folders = ["coll_"+str(coll_angle) for coll_angle in coll_angles]
 drive_folders = ["drive_"+str(drive_angle) for drive_angle in drive_angles]
 
 
-data_folder_path = "/media/samsung-2TB/results_phase_diagram/"+"N_shepherd_"+str(N_shepherd)+"/N_sheep_"+str(N_sheep)+"/"
+data_folder_path = "/mnt/DATA/yating/results_phase_diagram/"+"N_shepherd_"+str(N_shepherd)+"/N_sheep_"+str(N_sheep)+"/"
 print(data_folder_path)
 
 # data_folder_path = "/mnt/DATA/yating/results_phase_diagram/"+"N_shepherd_"+str(N_shepherd)+"/N_sheep_"+str(N_sheep)+"/"
