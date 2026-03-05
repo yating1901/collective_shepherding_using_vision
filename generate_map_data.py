@@ -166,7 +166,7 @@ def generate_map_json_data(N_shepherd, N_sheep, rep, coll_angles, drive_angles, 
 
 
 N_shepherd = 1
-N_sheep = 120 #80 120 160
+N_sheep = 160 #80 120 160
 rep = 5
 coll_angles=[angle for angle in range(30,121,10)]
 drive_angles=[angle for angle in range(0,91,10)]
