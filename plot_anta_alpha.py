@@ -4,7 +4,7 @@ import json
 import os
 
 def read_json_file(file_path):
-    print(f"Reading: {file_path}")
+    # print(f"Reading: {file_path}")
     all_data = []
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -41,26 +41,28 @@ def save_data(data, file_name, data_path):
 def transfer_data_to_json(Data_folder_path):
     N_sheep = 100
     alphas = [index for index in range(0, 50, 10)]
+    alpha_ticks = []
     for alpha in alphas:
         Alpha = round(alpha*3.14/180, 3) # transfer to radius degree
         folder_name = str(Alpha)
         if alpha == 0: folder_name = "0.000"
         if alpha == 90: folder_name = "1.570"
+        Nh_ticks = []
         for N_shepherd in range(1, 6):
             data_folder_path = Data_folder_path + "Alpha_" + folder_name + "/N_shepherd_" + str(N_shepherd) + "/N_sheep_" + str(N_sheep) + "/"
+            ticks = []
             for rep in [index for index in range(1,11)]:
-                final_ticks = []
-                ticks = []
                 for rep in range(1, 11):
                     file_path = f"{data_folder_path}rep_{rep}/sheep_data.json"
-                    print(file_path)
+                    # print(file_path)
                     if os.path.exists(file_path):
                         sheep_data = read_json_file(file_path)
                         if sheep_data:
                             ticks.append(sheep_data[-1]["tick"])
-                final_ticks.append(ticks)
-                json_file_name = "Alpha_" + str(alpha) + "N_s_" + str(N_sheep) + "rep_" + str(rep) + ".json"
-                save_data(final_ticks, json_file_name, Data_folder_path)
+            Nh_ticks.append(np.mean(ticks))
+        alpha_ticks.append(Nh_ticks)
+    json_file_name = "All_Mean_"+"Alpha_" + str(40) + "Ns_" + str(N_sheep) + "Rep_" + str(10) + ".json"
+    save_data(alpha_ticks, json_file_name, Data_folder_path)
     return
 
 
