@@ -66,7 +66,7 @@ def transfer_data_to_json(Data_folder_path):
     return
 
 
-data_folder_path = "/media/samsung-2TB/results/antagonistic/implicit/" #/mnt/data3/Yating_Data/results/antagonistic/explicit/" #"/mnt/DATA/yating/results/antagonistic/"
+
 # transfer_data_to_json(data_folder_path)
 
 N_sheep = 100
@@ -78,7 +78,7 @@ combinations = [
     {'marker': 'D', 'color': 'gold', 'markersize': 10},
     {'marker': '*', 'color': 'grey', 'markersize': 10},
 ]
-# data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/" #"/mnt/DATA/yating/results/antagonistic/"
+data_folder_path = "/mnt/data3/Yating_Data/results/antagonistic/implicit/" #"/mnt/DATA/yating/results/antagonistic/"
 
 plt.figure(figsize=(12, 8))
 marker_index = 0
