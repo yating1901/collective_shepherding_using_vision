@@ -68,9 +68,6 @@ class Loop_Function_Complex:
 
         self.list_of_obstacles = [{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
         #[{'x':750, 'y':600, 'radius':50}, {'x':600, 'y':750, 'radius':50}]  # (x,y,radius)
-        #[{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
-        # #[{'x':(self.Target_x - self.Target_size), 'y':(self.Target_y - self.Target_size),'radius':100}]
-        #,{'x':100, 'y':100, 'radius':50}]  # (x,y,radius)
         # Agent parameters
         self.agent_radii = agent_radius
 

@@ -131,7 +131,7 @@ for n_shepherd in range(1, N_shepherd+1):
 
 plt.xlabel('Alpha', fontsize=14)
 plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-plt.title('Antagonistic Sheep = '+str(N_sheep), fontsize=16)
+plt.title('Implicit strategies'+'Antagonistic Sheep = '+str(N_sheep), fontsize=14)
 plt.xticks(alphas)
 plt.grid(True, alpha=0.3)
 plt.legend(loc='best', ncol=2, fontsize=8)

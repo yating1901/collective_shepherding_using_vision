@@ -7,7 +7,7 @@ JOBS=()
 Iterations=50000
 Is_explcit=False
 
-for L3 in $(seq 50 100 101)
+for L3 in $(seq 0 0 0)
 do
   for N_shepherd in $(seq 1 1 1)
   do
