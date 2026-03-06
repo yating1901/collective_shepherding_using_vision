@@ -7,22 +7,23 @@ JOBS=()
 Iterations=50000
 Is_explcit=False
 
-for L3 in $(seq 0 0 0)
+#for L3 in $(seq 0 50 0)
+#do
+L3=100
+for N_shepherd in $(seq 1 1 1)
 do
-  for N_shepherd in $(seq 1 1 1)
+  for N_sheep in $(seq 50 50 200)
   do
-    for N_sheep in $(seq 50 50 200)
+    for Repetition in $(seq 1 1 10)
     do
-      for Repetition in $(seq 1 1 10)
-      do
-        OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
-        mkdir -p "$OUTPUT_FOLDER"
-        # Store the job as a string: "A REP OUTPUT_FOLDER"
-        JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
-      done
+      OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
+      mkdir -p "$OUTPUT_FOLDER"
+      # Store the job as a string: "A REP OUTPUT_FOLDER"
+      JOBS+=("$N_sheep $N_shepherd $Iterations $L3 $Repetition $OUTPUT_FOLDER")
     done
   done
 done
+#done
 
 
 i=0
