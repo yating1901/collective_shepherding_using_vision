@@ -1,14 +1,14 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/DATA/yating/results/basic/explicit" #"/mnt/data3/Yating_Data/results/basic/implicit"
+BASE_OUTPUT="/mnt/DATA/yating/results/basic/implicit" #"/mnt/data3/Yating_Data/results/basic/implicit"
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
 JOBS=()
 Iterations=50000
-Is_explcit=True
+Is_explcit=False
 Is_anta=False
 
-for L3 in $(seq 100 50 151)
+for L3 in $(seq 50 100 151)
 do
   for N_shepherd in $(seq 1 1 5)
   do
