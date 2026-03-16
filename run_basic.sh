@@ -1,5 +1,5 @@
 #!/bin/bash
-BASE_OUTPUT="/mnt/data3/Yating_Data/results/basic/implicit"
+BASE_OUTPUT="/mnt/DATA/yating/results/basic/explicit" #"/mnt/data3/Yating_Data/results/basic/implicit"
 mkdir -p "$BASE_OUTPUT"
 export LC_NUMERIC=C  # Force C locale (uses dot as decimal separator)
 
@@ -8,13 +8,13 @@ Iterations=100000
 Is_explcit=False
 Is_anta=False
 
-for L3 in $(seq 0 50 51)
+for L3 in $(seq 100 50 151)
 do
   for N_shepherd in $(seq 1 1 5)
   do
-    for N_sheep in $(seq 40 40 160)
+    for N_sheep in $(seq 50 50 200)
     do
-      for Repetition in $(seq 6 1 10)
+      for Repetition in $(seq 1 1 5)
       do
         OUTPUT_FOLDER="$BASE_OUTPUT/L3_$L3/N_shepherd_$N_shepherd/N_sheep_$N_sheep/rep_$Repetition"
         mkdir -p "$OUTPUT_FOLDER"
