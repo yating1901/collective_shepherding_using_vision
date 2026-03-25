@@ -9,16 +9,14 @@ Data_folder_path = "/mnt/data3/Yating_Data/results/basic/"
 #"/home/yateng/Workspace/CAB/data_analysis/Data_is_explicit/"
 
 combinations = [
-    {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
-    {'marker': 'o-', 'color': 'skyblue', 'markersize': 5},
-    {'marker': '*', 'color': 'yellow', 'markersize': 5},
-    {'marker': '*-', 'color': 'yellow', 'markersize': 5},
-    {'marker': 'D', 'color': 'pink', 'markersize': 5},
-    {'marker': 'D-', 'color': 'pink', 'markersize': 5},
-    {'marker': '^', 'color': 'grey', 'markersize': 5},
-    {'marker': '^-', 'color': 'grey', 'markersize': 5},
-    {'marker': 's', 'color': 'pink', 'markersize': 5},
-    {'marker': 's-', 'color': 'pink', 'markersize': 5},
+    {'marker': 'o', 'color': 'skyblue', "facecolor":"white", 'markersize': 12}, #L3=0_Im
+    {'marker': '*', 'color': 'yellow', "facecolor":"white", 'markersize': 12}, #L3=50_Im
+    {'marker': '^', 'color': 'purple', "facecolor":"white", 'markersize': 12}, #L3=100_Im
+    {'marker': 'D', 'color': 'grey', "facecolor":"white", 'markersize': 12},  #L3=150_Im
+    {'marker': 'o', 'color': 'skyblue', "facecolor": "skyblue", 'markersize': 12}, #L3=0_Ex
+    {'marker': '*', 'color': 'yellow', "facecolor": "yellow", 'markersize': 12}, #L3=50_Ex
+    {'marker': '^', 'color': 'purple', "facecolor": "purple", 'markersize': 12}, #L3=100_Ex
+    {'marker': 'D', 'color': 'grey', "facecolor": "grey", 'markersize': 12}, #L3=150_Ex
 ]
 
 def read_json_file(file_path):
@@ -63,7 +61,7 @@ for N_shepherd in [1, 2, 3, 4, 5]:
     marker_index = 0
     data_labels = []
 
-    for Is_explicit in [True, False]:
+    for Is_explicit in [False, True]:
         for L3 in [0, 50, 100, 150]:
             if Is_explicit:
                 data_folder_path = Data_folder_path + "explicit/"+"L3_" + str(L3)+"/"
