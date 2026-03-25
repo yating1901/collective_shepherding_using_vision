@@ -51,14 +51,14 @@ def save_data(data, file_name, data_path):
     return
 
 
-for N_shepherd in [1, 4, 5]:
+for N_shepherd in [1, 2, 3, 4, 5]:
 
     plt.figure(figsize=(12, 8))
     marker_index = 0
     data_labels = []
 
     for Is_explicit in [True, False]:
-        for L3 in [0, 100]:
+        for L3 in [0, 50, 100, 150]:
             if Is_explicit:
                 data_folder_path = Data_folder_path + "explicit/"+"L3_" + str(L3)+"/"
             else:
@@ -115,7 +115,7 @@ for N_shepherd in [1, 4, 5]:
 
     plt.xlabel('Number of Sheep', fontsize=14)
     plt.ylabel('Mean Final Tick ± Std Dev', fontsize=14)
-    plt.title('Different Strategies for Shepherd', fontsize=16)
+    plt.title('Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(10), fontsize=14)
     plt.xticks([40, 80, 120, 160])
     plt.grid(True, alpha=0.3)
     plt.legend()
