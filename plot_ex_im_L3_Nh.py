@@ -2,7 +2,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-from data_analysis.read_json_file import read_json_file
+import read_json_file
 import json
 
 Data_folder_path = "/mnt/data3/Yating_Data/results/basic"
