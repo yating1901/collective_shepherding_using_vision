@@ -2,10 +2,10 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-import read_json_file
+# import read_json_file
 import json
 
-Data_folder_path = "/mnt/data3/Yating_Data/results/basic"
+Data_folder_path = "/mnt/data3/Yating_Data/results/basic/"
 #"/home/yateng/Workspace/CAB/data_analysis/Data_is_explicit/"
 
 combinations = [
@@ -14,6 +14,29 @@ combinations = [
     {'marker': 's', 'color': 'grey', 'markersize': 5},
     {'marker': '^-', 'color': 'grey', 'markersize': 5},
 ]
+
+def read_json_file(file_path):
+    print(f"Reading: {file_path}")
+    all_data = []
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            # Read line by line
+            for line_num, line in enumerate(f, 1):
+                line = line.strip()
+                if line:  # Skip empty lines
+                    try:
+                        # Each line should be a JSON array
+                        tick_data = json.loads(line)
+                        all_data.extend(tick_data)
+                        #print(f"Line {line_num}: Added {len(tick_data)} records from tick {tick_data[0]['tick']}")
+                    except json.JSONDecodeError:
+                        print(f"✗ Could not parse line {line_num}: {line[:50]}...")
+        print(f"✓ Data covers ticks: {min(d['tick'] for d in all_data)} to {max(d['tick'] for d in all_data)}")
+        f.close()
+    except Exception as e:
+        print(f"✗ Error: {type(e).__name__}: {e}")
+
+    return all_data
 
 def save_data(data, file_name, data_path):
     json_file = file_name + ".json"
