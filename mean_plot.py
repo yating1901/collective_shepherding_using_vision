@@ -39,6 +39,7 @@ combinations = [
 # data_folder_path = "/media/samsung-2TB/Collective_Shepherding_Pygame_Data/result_without_fence_reflections/"
 data_folder_path = "/mnt/data3/Yating_Data/results/basic/implicit"
 # data_folder_path = "/mnt/data3/Yating_Data/results/basic/explicit"
+# data_folder_path = '/mnt/DATA/yating/results/basic/implicit'
 for L3 in [0, 50, 100, 150]:
     plt.figure(figsize=(12, 8))
     for N_shepherd in range(1, 6):
@@ -50,7 +51,7 @@ for L3 in [0, 50, 100, 150]:
         y_stds = []
         for N_sheep in [40, 80, 120, 160]:
             ticks = []
-            for rep in range(1, 6):
+            for rep in range(1, 10):
                 file_path = f"{data_folder_path}/L3_{L3}/N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/sheep_data.json"
                 if os.path.exists(file_path):
                     sheep_data = read_json_file(file_path)
@@ -82,6 +83,6 @@ for L3 in [0, 50, 100, 150]:
     plt.grid(True, alpha=0.3)
     plt.legend(title='Number of Shepherds')
     plt.tight_layout()
-    plt.savefig('Implicit_Time_and_Ns_Nh_L3='+str(L3)+'.png', dpi=300, bbox_inches='tight')
+    plt.savefig('Implicit_Time_and_Ns_Nh_L3='+str(L3)+'rep=10'+'.png', dpi=300, bbox_inches='tight')
     # plt.show()
     plt.clf()

@@ -19,7 +19,7 @@ do
   echo "Alpha = $Alpha"
   for N_shepherd in $(seq 1 1 5)
   do
-    for N_sheep in $(seq 100 20 101)
+    for N_sheep in $(seq 120 40 161)
     do
       for Repetition in $(seq 1 1 10)
       do
