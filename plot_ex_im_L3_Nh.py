@@ -51,7 +51,7 @@ def save_data(data, file_name, data_path):
     return
 
 
-for N_shepherd in [2, 3]:
+for N_shepherd in [1, 4, 5]:
 
     plt.figure(figsize=(12, 8))
     marker_index = 0
@@ -120,6 +120,6 @@ for N_shepherd in [2, 3]:
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    plt.savefig('Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(5)+'.png', dpi=300, bbox_inches='tight')
+    plt.savefig('Ex_implicit_Nsh_'+ str(N_shepherd) + '_rep_'+str(10)+'.png', dpi=300, bbox_inches='tight')
     # plt.show()
     plt.clf()
