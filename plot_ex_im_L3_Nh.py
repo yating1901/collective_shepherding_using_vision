@@ -10,9 +10,15 @@ Data_folder_path = "/mnt/data3/Yating_Data/results/basic/"
 
 combinations = [
     {'marker': 'o', 'color': 'skyblue', 'markersize': 5},
-    {'marker': '*-', 'color': 'skyblue', 'markersize': 5},
-    {'marker': 's', 'color': 'grey', 'markersize': 5},
+    {'marker': 'o-', 'color': 'skyblue', 'markersize': 5},
+    {'marker': '*', 'color': 'yellow', 'markersize': 5},
+    {'marker': '*-', 'color': 'yellow', 'markersize': 5},
+    {'marker': 'D', 'color': 'pink', 'markersize': 5},
+    {'marker': 'D-', 'color': 'pink', 'markersize': 5},
+    {'marker': '^', 'color': 'grey', 'markersize': 5},
     {'marker': '^-', 'color': 'grey', 'markersize': 5},
+    {'marker': 's', 'color': 'pink', 'markersize': 5},
+    {'marker': 's-', 'color': 'pink', 'markersize': 5},
 ]
 
 def read_json_file(file_path):
