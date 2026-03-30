@@ -48,7 +48,7 @@ def Caculte_coordination(shepherd_data):
     return coordination_percentage
 
 
-def plot_shepherd_states(Is_explicit, L3, Data_Folder_Path):
+def plot_shepherd_states_fixed_L3(Is_explicit, L3, Data_Folder_Path):
     # Create scatter plot
     combinations = [
         {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
@@ -85,10 +85,69 @@ def plot_shepherd_states(Is_explicit, L3, Data_Folder_Path):
         plt.grid(True, alpha=0.3)
         if Is_explicit:
             title_name = "Labor Division with Improved Rules: L3 = " + str(L3)
-            plt.ylim(0, 1)
+            plt.ylim(0.35, 1)
 
         else:
             title_name = "Labor Division with Implicit Rules: L3 = " + str(L3)
+            if L3 == 0:
+                plt.ylim(0.05, 0.5)
+            else:
+                plt.ylim(0.19, 0.75)
+
+        plt.title(title_name, fontsize=14)
+        plt.xlabel('Number of sheep', fontsize=12)
+        plt.ylabel('Division Rate', fontsize=12)
+        plt.legend()
+
+
+    plt.savefig(title_name + ".png", dpi=300, bbox_inches='tight')
+    plt.show()
+
+    return
+
+
+def plot_shepherd_states_fixed_Nh(Is_explicit, N_shepherd, data_folder_path):
+    # Create scatter plot
+    combinations = [
+        {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
+        {'marker': 's', 'color': 'skyblue', 'markersize': 10},
+        {'marker': '^', 'color': 'lightgreen', 'markersize': 10},
+        {'marker': 'D', 'color': 'gold', 'markersize': 10},
+        {'marker': '*', 'color': 'grey', 'markersize': 10},
+    ]
+    plt.figure(figsize=(12, 10))
+    for l3 in [0, 50, 100, 150]:
+        Data_Folder_Path = f"{data_folder_path}L3_{l3}/"
+        marker_style = combinations[N_shepherd - 1]
+        Coordination = []
+        for N_sheep in [40, 80, 120, 160]:
+            coordinate_states = []
+            for rep in range(1, 11):
+                shepherd_file_path = f"{Data_Folder_Path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/shepherd_data.json"
+                # print(shepherd_file_path)
+                shepherd_data = read_json_file(shepherd_file_path)
+                final_tick = int(shepherd_data[-1]["tick"])
+                coordinate_states.append(Caculte_coordination(shepherd_data))
+            # print(N_shepherd, N_sheep, rep, coordination)
+            Coordination.append(np.mean(coordinate_states))
+
+        X = [40, 80, 120, 160]
+        plt.plot(X, Coordination,
+                 marker_style['marker'] + '-',  # Marker with line
+                 color=marker_style['color'],
+                 markersize=10,
+                 linewidth=2,
+                 markeredgecolor='grey',
+                 markeredgewidth=0.5,
+                 label=f'L3 = {l3}',
+                 alpha=0.8)
+        plt.grid(True, alpha=0.3)
+        if Is_explicit:
+            title_name = "Labor Division with Improved Rules: Nh = " + str(N_shepherd)
+            plt.ylim(0, 1)
+
+        else:
+            title_name = "Labor Division with Implicit Rules: Nh = " + str(N_shepherd)
             plt.ylim(0, 1)
 
         plt.title(title_name, fontsize=14)
@@ -103,6 +162,21 @@ def plot_shepherd_states(Is_explicit, L3, Data_Folder_Path):
     return
 
 
+
+################## plot figure with fixed L3: Labor Division with Implicit Rules: L3 = 0.png###########
+# for is_explicit in [True, False]:
+#
+#     if is_explicit:
+#         data_folder_path_1 = "/mnt/data3/Yating_Data/results/basic/explicit/"
+#     else:
+#         data_folder_path_1 = "/mnt/data3/Yating_Data/results/basic/implicit/"
+#
+#     for l3 in [0, 50, 100, 150]:
+#         data_folder_path_2 = f"{data_folder_path_1}L3_{l3}/"
+#         plot_shepherd_states_fixed_L3(is_explicit, l3, data_folder_path_2)
+
+
+##################plot figure with fixed N_shepherd##################
 for is_explicit in [True, False]:
 
     if is_explicit:
@@ -110,7 +184,5 @@ for is_explicit in [True, False]:
     else:
         data_folder_path_1 = "/mnt/data3/Yating_Data/results/basic/implicit/"
 
-    for l3 in [50, 100, 150, 200]:
-        data_folder_path_2 = f"{data_folder_path_1}L3_{l3}/"
-
-        plot_shepherd_states(is_explicit, l3, data_folder_path_2)
+    for N_shepherd in range(2, 6):
+        plot_shepherd_states_fixed_Nh(is_explicit, N_shepherd, data_folder_path_1)
