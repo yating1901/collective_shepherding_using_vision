@@ -116,9 +116,10 @@ def plot_shepherd_states_fixed_Nh(Is_explicit, N_shepherd, data_folder_path):
         {'marker': '*', 'color': 'grey', 'markersize': 10},
     ]
     plt.figure(figsize=(12, 10))
+    index = 0
     for l3 in [0, 50, 100, 150]:
         Data_Folder_Path = f"{data_folder_path}L3_{l3}/"
-        marker_style = combinations[N_shepherd - 1]
+        marker_style = combinations[index]
         Coordination = []
         for N_sheep in [40, 80, 120, 160]:
             coordinate_states = []
@@ -142,6 +143,7 @@ def plot_shepherd_states_fixed_Nh(Is_explicit, N_shepherd, data_folder_path):
                  label=f'L3 = {l3}',
                  alpha=0.8)
         plt.grid(True, alpha=0.3)
+        index = index + 1
         if Is_explicit:
             title_name = "Labor Division with Improved Rules: Nh = " + str(N_shepherd)
             plt.ylim(0, 1)
