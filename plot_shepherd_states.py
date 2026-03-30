@@ -8,9 +8,9 @@ import math
 is_explicit = True
 
 if is_explicit:
-    data_folder_path = "/mnt/data3/Yating_Data/results/basic/explicit/"
+    data_folder_path = "/mnt/data3/Yating_Data/results/basic/explicit/L3=0/"
 else:
-    data_folder_path = "/mnt/data3/Yating_Data/results/basic/implicit/"
+    data_folder_path = "/mnt/data3/Yating_Data/results/basic/implicit/L3=0/"
 
 def read_json_file(file_path):
     print(f"Reading: {file_path}")
@@ -68,7 +68,7 @@ for N_shepherd in range(2, 6):
         coordinate_states = []
         for rep in range(1, 11):
             shepherd_file_path = f"{data_folder_path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/shepherd_data.json"
-            print(shepherd_file_path)
+            # print(shepherd_file_path)
             shepherd_data = read_json_file(shepherd_file_path)
             final_tick = int(shepherd_data[-1]["tick"])
             coordinate_states.append(Caculte_coordination(shepherd_data))
