@@ -5,12 +5,7 @@ import os
 import matplotlib.pyplot as plt
 import math
 
-is_explicit = True
 
-if is_explicit:
-    data_folder_path = "/mnt/data3/Yating_Data/results/basic/explicit/L3=0/"
-else:
-    data_folder_path = "/mnt/data3/Yating_Data/results/basic/implicit/L3=0/"
 
 def read_json_file(file_path):
     print(f"Reading: {file_path}")
@@ -52,53 +47,70 @@ def Caculte_coordination(shepherd_data):
     coordination_percentage = np.sum(states)/Final_tick
     return coordination_percentage
 
-# Create scatter plot
-combinations = [
-    {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
-    {'marker': 's', 'color': 'skyblue', 'markersize': 10},
-    {'marker': '^', 'color': 'lightgreen', 'markersize': 10},
-    {'marker': 'D', 'color': 'gold', 'markersize': 10},
-    {'marker': '*', 'color': 'grey', 'markersize': 10},
-]
-plt.figure(figsize=(12, 10))
-for N_shepherd in range(2, 6):
-    marker_style = combinations[N_shepherd - 1]
-    Coordination = []
-    for N_sheep in [40, 80, 120, 160]:
-        coordinate_states = []
-        for rep in range(1, 11):
-            shepherd_file_path = f"{data_folder_path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/shepherd_data.json"
-            # print(shepherd_file_path)
-            shepherd_data = read_json_file(shepherd_file_path)
-            final_tick = int(shepherd_data[-1]["tick"])
-            coordinate_states.append(Caculte_coordination(shepherd_data))
-        # print(N_shepherd, N_sheep, rep, coordination)
-        Coordination.append(np.mean(coordinate_states))
 
-    X = [40, 80, 120, 160]
-    plt.plot(X, Coordination,
-             marker_style['marker'] + '-',  # Marker with line
-             color=marker_style['color'],
-             markersize=10,
-             linewidth=2,
-             markeredgecolor='grey',
-             markeredgewidth=0.5,
-             label=f'N_shepherd = {N_shepherd}',
-             alpha=0.8)
-    plt.grid(True, alpha=0.3)
-    plt.ylim(0.2, 0.8)
+def plot_shepherd_states(Is_explicit, L3, Data_Folder_Path):
+    # Create scatter plot
+    combinations = [
+        {'marker': 'o', 'color': 'lightcoral', 'markersize': 10},
+        {'marker': 's', 'color': 'skyblue', 'markersize': 10},
+        {'marker': '^', 'color': 'lightgreen', 'markersize': 10},
+        {'marker': 'D', 'color': 'gold', 'markersize': 10},
+        {'marker': '*', 'color': 'grey', 'markersize': 10},
+    ]
+    plt.figure(figsize=(12, 10))
+    for N_shepherd in range(2, 6):
+        marker_style = combinations[N_shepherd - 1]
+        Coordination = []
+        for N_sheep in [40, 80, 120, 160]:
+            coordinate_states = []
+            for rep in range(1, 11):
+                shepherd_file_path = f"{Data_Folder_Path}N_shepherd_{N_shepherd}/N_sheep_{N_sheep}/rep_{rep}/shepherd_data.json"
+                # print(shepherd_file_path)
+                shepherd_data = read_json_file(shepherd_file_path)
+                final_tick = int(shepherd_data[-1]["tick"])
+                coordinate_states.append(Caculte_coordination(shepherd_data))
+            # print(N_shepherd, N_sheep, rep, coordination)
+            Coordination.append(np.mean(coordinate_states))
+
+        X = [40, 80, 120, 160]
+        plt.plot(X, Coordination,
+                 marker_style['marker'] + '-',  # Marker with line
+                 color=marker_style['color'],
+                 markersize=10,
+                 linewidth=2,
+                 markeredgecolor='grey',
+                 markeredgewidth=0.5,
+                 label=f'N_shepherd = {N_shepherd}',
+                 alpha=0.8)
+        plt.grid(True, alpha=0.3)
+        if Is_explicit:
+            title_name = "Labor Division with Improved Rules: L3 = " + str(L3)
+            plt.ylim(0, 1)
+
+        else:
+            title_name = "Labor Division with Implicit Rules: L3 = " + str(L3)
+            plt.ylim(0, 1)
+
+        plt.title(title_name, fontsize=14)
+        plt.xlabel('Number of sheep', fontsize=12)
+        plt.ylabel('Division Rate', fontsize=12)
+        plt.legend()
+
+
+    plt.savefig(title_name + ".png", dpi=300, bbox_inches='tight')
+    plt.show()
+
+    return
+
+
+for is_explicit in [True, False]:
 
     if is_explicit:
-        title_name = "Labor Division with Improved Rules"
-
+        data_folder_path_1 = "/mnt/data3/Yating_Data/results/basic/explicit/"
     else:
-        title_name = "Labor Division with Implicit Rules"
+        data_folder_path_1 = "/mnt/data3/Yating_Data/results/basic/implicit/"
 
-    plt.title(title_name, fontsize=14)
-    plt.xlabel('Number of sheep', fontsize=12)
-    plt.ylabel('Division Rate', fontsize=12)
-    plt.legend()
+    for l3 in [50, 100, 150, 200]:
+        data_folder_path_2 = f"{data_folder_path_1}L3_{l3}/"
 
-
-plt.savefig(title_name + ".png", dpi=300, bbox_inches='tight')
-plt.show()
+        plot_shepherd_states(is_explicit, l3, data_folder_path_2)
