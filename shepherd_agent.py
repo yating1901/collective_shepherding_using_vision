@@ -456,6 +456,8 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         v_dot = self.gamma*(self.v0 - self.vt) +  F_x * np.cos(self.orientation) + F_y * np.sin(self.orientation)   # heading_direction_acceleration
         w_dot = -F_x * np.sin(self.orientation) + F_y * np.cos(self.orientation)  # angular_acceleration
 
+        #Friction-propulsion functions
+        #v(t+1) = v(t) + [gama*(v0-vt) + Fu]*dt + Dr
 
         self.vt = v_dot * self.alpha * self.tick_time + self.vt
 
