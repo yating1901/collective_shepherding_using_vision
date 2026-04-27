@@ -12,7 +12,7 @@ Boundary_y = Target_place_y + Target_size
 TICK = 1
 Iterations = 50000
 
-N_sheep = 150
+N_sheep = 80
 N_shepherd = 1
 L3 = 100   # minimum repulsion distance with other shepherds;
 Fps = 50
@@ -21,12 +21,12 @@ Show_Animation = False
 Robot_Loop = False
 Save_data = False
 
-Is_Explicit = True
+Is_Explicit = False #True
 Is_Visualized = True #False
 Is_Antagonistic = False #True
 Alpha = 0 #np.pi/6 #5 4 3
-Coll_threshold = (30/180)*np.pi # np.pi / 2 #
-Drive_threshold = 0 #np.pi / 6 #(60/180)*np.pi #
+Coll_threshold = np.pi / 2 #
+Drive_threshold = np.pi / 6 #(60/180)*np.pi #
 
 from loop_function import Loop_Function
 

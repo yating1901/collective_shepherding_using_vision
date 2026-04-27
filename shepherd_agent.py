@@ -72,9 +72,10 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         )
 
         #######################################################
-        self.v0 = 0
+        self.v0 = 10
         self.vt = self.v0 # initial value
-        self.v_max = 300 #400 #360
+        self.v_max = 400 #300 #400 #360
+        self.gamma = 1
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
         # self.v_upper = 2
@@ -87,9 +88,9 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.l3 = L3  # L3: distance to avoid other shepherd
         self.state = 1.0  # shepherd state: 1.0 --> drive_mode = true
         self.alpha = 1    #10 #0.1  # acceleration rate
-        self.beta =  1   #0.08  # turning rate
+        self.beta =  0.1   #0.08  # turning rate
         self.Dr = 0.1     # noise
-        self.tick_time = 0.01  #0.01
+        self.tick_time = 0.01  #<=1/self.K_shepherd_force = 0.001 upper limit
         self.drive_agent_id = 0
         self.collect_agent_id = 0
         self.approach_agent_id = 0
@@ -117,8 +118,8 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         self.f_drive_agent_x = 0.0
         self.f_drive_agent_y = 0.0
 
-        self.K_drive_sheep = 200
-        self.K_other_shepherd = 1000
+        self.K_drive_sheep = 2 #200
+        self.K_other_shepherd = 100 #1000
         # Showing agent orientation with a line towards agent orientation
         pygame.draw.line(self.image, support.BACKGROUND, (radius, radius),
                          ((1 + np.cos(self.orientation)) * radius, (1 + np.sin(self.orientation)) * radius), 3)
@@ -427,7 +428,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         :param sheep_agents:
         """
         self.reflect_from_walls(self.boundary)
-        #self.reflect_from_fence()
+        self.reflect_from_fence()
 
         self.update_shepherd_forces(shepherd_agents)
 
@@ -452,7 +453,7 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         # F_y = self.f_drive_agent_y * self.K_drive_sheep  + self.f_y_other_shepherd * self.K_other_shepherd
 
         # calculate the linear speed and angular speed;
-        v_dot = F_x * np.cos(self.orientation) + F_y * np.sin(self.orientation)   # heading_direction_acceleration
+        v_dot = self.gamma*(self.v0 - self.vt) +  F_x * np.cos(self.orientation) + F_y * np.sin(self.orientation)   # heading_direction_acceleration
         w_dot = -F_x * np.sin(self.orientation) + F_y * np.cos(self.orientation)  # angular_acceleration
 
 
@@ -463,9 +464,11 @@ class Shepherd_Agent(pygame.sprite.Sprite):
         if self.vt <= -self.v_max:
             self.vt = -self.v_max
 
+        # print(self.vt)
         noise = np.sqrt(2 * self.Dr) / (self.tick_time ** 0.5) * np.random.normal(0, 1)
 
-        self.orientation += (w_dot * self.beta/(self.vt + 0.0001) + noise) * self.tick_time
+        self.orientation += (w_dot * self.beta + noise) * self.tick_time
+        # self.orientation += (w_dot * self.beta / (self.vt + 0.0001) + noise) * self.tick_time
         self.orientation = support.transform_angle(self.orientation)  # [-pi, pi]
 
 

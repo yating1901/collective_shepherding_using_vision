@@ -79,9 +79,10 @@ class Sheep_Agent(pygame.sprite.Sprite):
         #############################################
         self.x = self.position[0] + self.radius
         self.y = self.position[1] + self.radius
-        self.v0 = 0
-        self.v_max = 150 #100 #200
-        self.vt = self.v0  # when tick = 0, vt = v0;
+        self.v0 = 5 #0
+        self.v_max = 200 #100 #200
+        self.vt = 5  # when tick = 0, vt = v0;
+        self.gamma = 1
         self.v_upper = 2
         self.target_x = target_x
         self.target_y = target_y
@@ -97,11 +98,11 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.att_distance = 120 #130  #100 #25  #50
         self.safe_distance = 300 #300  # 180 # 150 #130 #65   #200
         # parameter for force
-        self.K_repulsion = 2800 #2800  #1200 #1600    #60 2
-        self.K_attraction = 2200 #2200 #5000 #2200 #2000 #1600 #2000  #2200   #20 0.8  #5.0
-        self.K_shepherd = 3500 #6000 #3500 #4500    #12  1.5
+        self.K_repulsion = 280 #28 #2800 #2800  #1200 #1600
+        self.K_attraction = 220 #2200 #2200 #5000 #2200
+        self.K_shepherd = 350 #3500 #6000 #3500 #4500
         self.K_Dr = 0.01  # 0.1 noise_strength
-        self.tick_time = 0.01  #0.1
+        self.tick_time = 0.01  #0.1/home/yateng/Workspace/CoBe_Shepherding
         self.max_turning_angle = np.pi * 2 / 3 #np.pi * 1 / 4
         self.f_avoid_x = 0.0
         self.f_avoid_y = 0.0
@@ -113,7 +114,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
         self.interact_network = []
         self.fov = np.pi *  4/3
         self.acceleration = 1 #0.1 # heading accelerator
-        self.beta = 1 #0.8  # tuning accelerator
+        self.beta = 0.1 #1 0.8  # tuning accelerator
         # self.delta_angle = 0
 
         #####shepherd relative parameters#########
@@ -304,47 +305,48 @@ class Sheep_Agent(pygame.sprite.Sprite):
         # Boundary conditions according to center of agent (simple)
         self.orientation = support.reflect_angle(self.orientation)  # [0, 2pi]
         fence_width = 10
-        if self.state == "moving":
-            # # Reflection from left fence
-            # if (self.x > self.target_x - self.target_size - fence_width - self.radius) and (self.y >= self.target_y - self.window_pad):
-            #
-            #     self.x = self.target_x - self.target_size - fence_width - 1
-            #
-            #     if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
-            #         self.orientation -= np.pi / 2
-            #     elif 0 <= self.orientation <= np.pi / 2:
-            #         self.orientation += np.pi / 2
-            # # Reflection from upper fence
-            # if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (
-            #         self.x >= self.target_x - self.window_pad):
-            #
-            #     self.y = self.target_y - self.target_size - fence_width - 1
-            #
-            #     if np.pi / 2 <= self.orientation <= np.pi:
-            #         self.orientation += np.pi / 2
-            #     elif 0 <= self.orientation < np.pi / 2:
-            #         self.orientation -= np.pi / 2
-            # Reflection from left fence
-            if (self.x > self.target_x - self.target_size - self.radius - fence_width) and (
-                    self.y >= self.target_y - self.window_pad - fence_width):
-
-                self.x = self.target_x - self.target_size - fence_width - 1
-
-                if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
-                    # self.orientation -= np.pi / 2
-                    self.orientation = -np.pi/2
-                elif 0 <= self.orientation <= np.pi / 2:
-                    # self.orientation += np.pi / 2
-                    self.orientation = np.pi / 2
-            # Reflection from upper fence
-            if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (self.x >= self.target_x - self.window_pad):
-
-                self.y = self.target_y - self.target_size - fence_width -1
-
-                if np.pi / 2 <= self.orientation <= np.pi:
-                    self.orientation = np.pi
-                elif 0 <= self.orientation < np.pi / 2:
-                    self.orientation = np.pi/2
+        # if self.state == "moving":
+        #     # # Reflection from left fence
+        #     # if (self.x > self.target_x - self.target_size - fence_width - self.radius) and (self.y >= self.target_y - self.window_pad):
+        #     #
+        #     #     self.x = self.target_x - self.target_size - fence_width - 1
+        #     #
+        #     #     if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
+        #     #         self.orientation -= np.pi / 2
+        #     #     elif 0 <= self.orientation <= np.pi / 2:
+        #     #         self.orientation += np.pi / 2
+        #     # # Reflection from upper fence
+        #     # if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (
+        #     #         self.x >= self.target_x - self.window_pad):
+        #     #
+        #     #     self.y = self.target_y - self.target_size - fence_width - 1
+        #     #
+        #     #     if np.pi / 2 <= self.orientation <= np.pi:
+        #     #         self.orientation += np.pi / 2
+        #     #     elif 0 <= self.orientation < np.pi / 2:
+        #     #         self.orientation -= np.pi / 2
+        #
+        #     # Reflection from left fence
+        #     if (self.x > self.target_x - self.target_size - self.radius - fence_width) and (
+        #             self.y >= self.target_y - self.window_pad - fence_width):
+        #
+        #         self.x = self.target_x - self.target_size - fence_width - 1
+        #
+        #         if 3 * np.pi / 2 <= self.orientation < 2 * np.pi:
+        #             # self.orientation -= np.pi / 2
+        #             self.orientation = -np.pi/2
+        #         elif 0 <= self.orientation <= np.pi / 2:
+        #             # self.orientation += np.pi / 2
+        #             self.orientation = np.pi / 2
+        #     # Reflection from upper fence
+        #     if (self.y > self.target_y - self.target_size - fence_width - self.radius) and (self.x >= self.target_x - self.window_pad):
+        #
+        #         self.y = self.target_y - self.target_size - fence_width -1
+        #
+        #         if np.pi / 2 <= self.orientation <= np.pi:
+        #             self.orientation = np.pi
+        #         elif 0 <= self.orientation < np.pi / 2:
+        #             self.orientation = np.pi/2
 
         if self.state == "staying":
             # Reflection from left wall
@@ -452,6 +454,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
 
         self.reflect_from_walls()
 
+        self.reflect_from_fence()
+
         self.Get_interaction_network(agents)
 
         self.Limit_field_of_view(agents)
@@ -474,7 +478,7 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.f_y = self.f_att_y * self.K_attraction + self.f_shepherd_force_y * self.K_shepherd
 
 
-        self.v_dot = self.f_x * np.cos(self.orientation) + self.f_y * np.sin(self.orientation)
+        self.v_dot = self.gamma*(self.v0 - self.vt) + self.f_x * np.cos(self.orientation) + self.f_y * np.sin(self.orientation)
         self.w_dot = -self.f_x * np.sin(self.orientation) + self.f_y * np.cos(self.orientation)
 
         # if self.w_dot > self.max_turning_angle:
@@ -492,7 +496,8 @@ class Sheep_Agent(pygame.sprite.Sprite):
             self.vt = -self.v_max
 
         # self.orientation += (self.w_dot/self.v0 + Dr) * self.tick_time  # 1/self.vt inertia ??
-        self.orientation += (self.w_dot * self.beta / (self.vt+ 0.0001) + Dr) * self.tick_time
+        self.orientation += (self.w_dot * self.beta + Dr) * self.tick_time
+        # self.orientation += (self.w_dot * self.beta / (self.vt+ 0.0001) + Dr) * self.tick_time
         self.orientation = support.transform_angle(self.orientation)    # [-pi, pi]
 
         if self.vt < 0:
